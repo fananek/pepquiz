@@ -1,0 +1,532 @@
+@import "tailwindcss";
+
+/*
+ * Modern color-scheme architecture following modern-web-guidance:
+ * - Root declares `color-scheme: light dark` and maps <meta name="color-scheme"> overrides back to CSS
+ * - Raw light/dark tokens + @media (prefers-color-scheme: dark) fallback + @supports (light-dark()) enhancement
+ * - WCAG 2.1 AA+ contrast ratios (>= 4.5:1 normal text, >= 3:1 borders & large text) in both light & dark themes
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Raw light palette */
+  --bg-page-light: #f6f3ec;
+  --bg-surface-light: #ffffff;
+  --bg-elevated-light: #efeae0;
+  --bg-subtle-light: #e5dfd2;
+  --text-primary-light: #1a1612;
+  --text-secondary-light: #4a4238;
+  --text-muted-light: #62584c;
+  --border-default-light: #8c8070;
+  --border-subtle-light: #cdc4b4;
+  --accent-light: #9a4706;
+  --accent-hover-light: #7c3804;
+  --accent-soft-light: #fef3c7;
+  --accent-text-light: #ffffff;
+  --success-light: #146c43;
+  --success-soft-light: #dcfce7;
+  --warning-light: #92400e;
+  --warning-soft-light: #fef3c7;
+  --danger-light: #b91c1c;
+  --danger-soft-light: #fee2e2;
+  --info-light: #1d4ed8;
+  --info-soft-light: #dbeafe;
+  --focus-ring-light: #0f4c81;
+  --scrollbar-track-light: #e7e1d5;
+  --scrollbar-thumb-light: #6e6355;
+
+  /* Raw dark palette (warm pub slate + glowing amber) */
+  --bg-page-dark: #10131a;
+  --bg-surface-dark: #181d27;
+  --bg-elevated-dark: #222938;
+  --bg-subtle-dark: #2c3547;
+  --text-primary-dark: #f8f5ef;
+  --text-secondary-dark: #d1cbc0;
+  --text-muted-dark: #a6a095;
+  --border-default-dark: #6c768a;
+  --border-subtle-dark: #353f52;
+  --accent-dark: #f59e0b;
+  --accent-hover-dark: #fbbf24;
+  --accent-soft-dark: #422b08;
+  --accent-text-dark: #14100a;
+  --success-dark: #34d399;
+  --success-soft-dark: #0e3828;
+  --warning-dark: #fbbf24;
+  --warning-soft-dark: #422c09;
+  --danger-dark: #f87171;
+  --danger-soft-dark: #451518;
+  --info-dark: #60a5fa;
+  --info-soft-dark: #152b4f;
+  --focus-ring-dark: #fbbf24;
+  --scrollbar-track-dark: #181d27;
+  --scrollbar-thumb-dark: #7d8699;
+
+  /* Fallback defaults (light) for browsers without light-dark() */
+  --bg-page: var(--bg-page-light);
+  --bg-surface: var(--bg-surface-light);
+  --bg-elevated: var(--bg-elevated-light);
+  --bg-subtle: var(--bg-subtle-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --text-muted: var(--text-muted-light);
+  --border-default: var(--border-default-light);
+  --border-subtle: var(--border-subtle-light);
+  --accent: var(--accent-light);
+  --accent-hover: var(--accent-hover-light);
+  --accent-soft: var(--accent-soft-light);
+  --accent-text: var(--accent-text-light);
+  --success: var(--success-light);
+  --success-soft: var(--success-soft-light);
+  --warning: var(--warning-light);
+  --warning-soft: var(--warning-soft-light);
+  --danger: var(--danger-light);
+  --danger-soft: var(--danger-soft-light);
+  --info: var(--info-light);
+  --info-soft: var(--info-soft-light);
+  --focus-ring: var(--focus-ring-light);
+  --scrollbar-track: var(--scrollbar-track-light);
+  --scrollbar-thumb: var(--scrollbar-thumb-light);
+
+  @media (prefers-color-scheme: dark) {
+    --bg-page: var(--bg-page-dark);
+    --bg-surface: var(--bg-surface-dark);
+    --bg-elevated: var(--bg-elevated-dark);
+    --bg-subtle: var(--bg-subtle-dark);
+    --text-primary: var(--text-primary-dark);
+    --text-secondary: var(--text-secondary-dark);
+    --text-muted: var(--text-muted-dark);
+    --border-default: var(--border-default-dark);
+    --border-subtle: var(--border-subtle-dark);
+    --accent: var(--accent-dark);
+    --accent-hover: var(--accent-hover-dark);
+    --accent-soft: var(--accent-soft-dark);
+    --accent-text: var(--accent-text-dark);
+    --success: var(--success-dark);
+    --success-soft: var(--success-soft-dark);
+    --warning: var(--warning-dark);
+    --warning-soft: var(--warning-soft-dark);
+    --danger: var(--danger-dark);
+    --danger-soft: var(--danger-soft-dark);
+    --info: var(--info-dark);
+    --info-soft: var(--info-soft-dark);
+    --focus-ring: var(--focus-ring-dark);
+    --scrollbar-track: var(--scrollbar-track-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  }
+
+  /* Reflect <meta name="color-scheme"> manual toggle back into CSS cascade */
+  &:has(> head > meta[name="color-scheme"][content="dark"]) {
+    color-scheme: dark;
+    --bg-page: var(--bg-page-dark);
+    --bg-surface: var(--bg-surface-dark);
+    --bg-elevated: var(--bg-elevated-dark);
+    --bg-subtle: var(--bg-subtle-dark);
+    --text-primary: var(--text-primary-dark);
+    --text-secondary: var(--text-secondary-dark);
+    --text-muted: var(--text-muted-dark);
+    --border-default: var(--border-default-dark);
+    --border-subtle: var(--border-subtle-dark);
+    --accent: var(--accent-dark);
+    --accent-hover: var(--accent-hover-dark);
+    --accent-soft: var(--accent-soft-dark);
+    --accent-text: var(--accent-text-dark);
+    --success: var(--success-dark);
+    --success-soft: var(--success-soft-dark);
+    --warning: var(--warning-dark);
+    --warning-soft: var(--warning-soft-dark);
+    --danger: var(--danger-dark);
+    --danger-soft: var(--danger-soft-dark);
+    --info: var(--info-dark);
+    --info-soft: var(--info-soft-dark);
+    --focus-ring: var(--focus-ring-dark);
+    --scrollbar-track: var(--scrollbar-track-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  }
+
+  &:has(> head > meta[name="color-scheme"][content="light"]) {
+    color-scheme: light;
+    --bg-page: var(--bg-page-light);
+    --bg-surface: var(--bg-surface-light);
+    --bg-elevated: var(--bg-elevated-light);
+    --bg-subtle: var(--bg-subtle-light);
+    --text-primary: var(--text-primary-light);
+    --text-secondary: var(--text-secondary-light);
+    --text-muted: var(--text-muted-light);
+    --border-default: var(--border-default-light);
+    --border-subtle: var(--border-subtle-light);
+    --accent: var(--accent-light);
+    --accent-hover: var(--accent-hover-light);
+    --accent-soft: var(--accent-soft-light);
+    --accent-text: var(--accent-text-light);
+    --success: var(--success-light);
+    --success-soft: var(--success-soft-light);
+    --warning: var(--warning-light);
+    --warning-soft: var(--warning-soft-light);
+    --danger: var(--danger-light);
+    --danger-soft: var(--danger-soft-light);
+    --info: var(--info-light);
+    --info-soft: var(--info-soft-light);
+    --focus-ring: var(--focus-ring-light);
+    --scrollbar-track: var(--scrollbar-track-light);
+    --scrollbar-thumb: var(--scrollbar-thumb-light);
+  }
+
+  /* Progressive enhancement with native CSS light-dark() */
+  @supports (color: light-dark(white, black)) {
+    --bg-page: light-dark(var(--bg-page-light), var(--bg-page-dark));
+    --bg-surface: light-dark(var(--bg-surface-light), var(--bg-surface-dark));
+    --bg-elevated: light-dark(var(--bg-elevated-light), var(--bg-elevated-dark));
+    --bg-subtle: light-dark(var(--bg-subtle-light), var(--bg-subtle-dark));
+    --text-primary: light-dark(var(--text-primary-light), var(--text-primary-dark));
+    --text-secondary: light-dark(var(--text-secondary-light), var(--text-secondary-dark));
+    --text-muted: light-dark(var(--text-muted-light), var(--text-muted-dark));
+    --border-default: light-dark(var(--border-default-light), var(--border-default-dark));
+    --border-subtle: light-dark(var(--border-subtle-light), var(--border-subtle-dark));
+    --accent: light-dark(var(--accent-light), var(--accent-dark));
+    --accent-hover: light-dark(var(--accent-hover-light), var(--accent-hover-dark));
+    --accent-soft: light-dark(var(--accent-soft-light), var(--accent-soft-dark));
+    --accent-text: light-dark(var(--accent-text-light), var(--accent-text-dark));
+    --success: light-dark(var(--success-light), var(--success-dark));
+    --success-soft: light-dark(var(--success-soft-light), var(--success-soft-dark));
+    --warning: light-dark(var(--warning-light), var(--warning-dark));
+    --warning-soft: light-dark(var(--warning-soft-light), var(--warning-soft-dark));
+    --danger: light-dark(var(--danger-light), var(--danger-dark));
+    --danger-soft: light-dark(var(--danger-soft-light), var(--danger-soft-dark));
+    --info: light-dark(var(--info-light), var(--info-dark));
+    --info-soft: light-dark(var(--info-soft-light), var(--info-soft-dark));
+    --focus-ring: light-dark(var(--focus-ring-light), var(--focus-ring-dark));
+    --scrollbar-track: light-dark(var(--scrollbar-track-light), var(--scrollbar-track-dark));
+    --scrollbar-thumb: light-dark(var(--scrollbar-thumb-light), var(--scrollbar-thumb-dark));
+  }
+
+  accent-color: var(--accent);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* High-contrast accessible focus indicator (WCAG 2.4.7 & 1.4.11) */
+:where(a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  :where(a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])):focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+  .card, .btn-primary, .btn-secondary {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Canonical visually-hidden utility (opts out on :focus-within / :active for skip links) */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+.skip-link:focus-visible {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  border-radius: 0.5rem;
+  text-decoration: none;
+}
+
+/* Accessible form controls & iOS zoom prevention (font-size >= 1rem, min-height >= 48px) */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  font: inherit;
+  font-size: max(1rem, 1em);
+  min-height: 48px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 2px solid var(--border-default);
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  box-sizing: border-box;
+}
+
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea,
+  button {
+    min-height: 48px;
+  }
+}
+
+/* Validate input only after user interaction (:user-invalid with fallback) */
+:is(input, select, textarea):is(:user-invalid, .user-invalid-fallback) {
+  border-color: var(--danger);
+  background-color: var(--danger-soft);
+}
+
+:is(input, select, textarea):is(:user-valid, .user-valid-fallback) {
+  border-color: var(--success);
+}
+
+/* Native <dialog> scroll containment & backdrop (modern-web-guidance) */
+dialog:modal {
+  overscroll-behavior: contain;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 2px solid var(--border-subtle);
+  border-radius: 1rem;
+  padding: 0;
+  max-width: min(92vw, 36rem);
+  width: 100%;
+  margin: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(10, 14, 23, 0.68);
+  backdrop-filter: blur(3px);
+}
+
+/* Reusable semantic component tokens */
+.surface-card {
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 1rem;
+}
+
+.elevated-card {
+  background-color: var(--bg-elevated);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 0.875rem;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.7rem 1.25rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background-color 120ms ease, transform 80ms ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.1rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: 1.5px solid var(--border-default);
+  transition: background-color 120ms ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-subtle);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary[aria-pressed="true"] {
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+@media (forced-colors: active) {
+  .btn-secondary[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+/* Host top bars: stable single-row desktop layout with safe cross-axis alignment */
+.host-topbar {
+  display: flex;
+  align-items: safe center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .host-topbar {
+    flex-wrap: nowrap;
+  }
+}
+
+.host-controlbar-shell {
+  container: host-controlbar / inline-size;
+}
+
+.host-controlbar {
+  display: flex;
+  align-items: safe center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  flex-wrap: wrap;
+}
+
+.host-controlbar-group {
+  display: flex;
+  align-items: safe center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+
+@container host-controlbar (inline-size >= 1180px) {
+  .host-controlbar {
+    flex-wrap: nowrap;
+  }
+
+  .host-controlbar-group {
+    flex-wrap: nowrap;
+  }
+}
+
+.host-controlbar-sep {
+  align-self: stretch;
+  margin-block: 0.25rem;
+  border-inline-start: 1.5px solid var(--border-subtle);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.1rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+/* Accessible single-row scrollable tabs (modern-web-guidance: tabs) */
+.tablist-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: inline proximity;
+  border-bottom: 1.5px solid var(--border-subtle);
+  gap: 0.25rem;
+  scrollbar-width: none;
+}
+
+.tablist-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tablist-scroll [role="tab"] {
+  position: relative;
+  flex: none;
+  scroll-snap-align: start;
+  background: transparent;
+  border: 0;
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.65rem 0.9rem;
+  min-height: 44px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.tablist-scroll [role="tab"][aria-selected="true"] {
+  color: var(--accent);
+}
+
+.tablist-scroll [role="tab"][aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  border-block-end: 3px solid var(--accent);
+}
+
+@media (forced-colors: active) {
+  .tablist-scroll [role="tab"][aria-selected="true"]::after {
+    border-block-end-color: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

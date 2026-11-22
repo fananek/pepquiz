@@ -1,0 +1,274 @@
+{
+  "id": "demo-kviz",
+  "title": "Rychl\u00FD demo kv\u00EDz (V\u0161echny funkce)",
+  "description": "Kr\u00E1tk\u00FD uk\u00E1zkov\u00FD kv\u00EDz se v\u0161emi typy ot\u00E1zek, lok\u00E1ln\u00EDmi m\u00E9dii, p\u0159ekladem do EN a fin\u00E1lov\u00FDm \u017Eol\u00EDkem.",
+  "defaultLanguage": "cs",
+  "rules": [
+    "Z\u00E1kladn\u00ED ot\u00E1zky jsou za 1 000 bod\u016F \u002B a\u017E 200 bod\u016F rychlostn\u00ED bonus (kles\u00E1 a\u017E po 5 s).",
+    "V otev\u0159en\u00FDch ot\u00E1zk\u00E1ch tolerujeme p\u0159eklepy a chyb\u011Bj\u00EDc\u00ED diakritiku; moder\u00E1tor m\u016F\u017Ee ud\u011Blit i \u00BD bodu.",
+    "Ve fin\u00E1lov\u00E9m kole jsou body dvojn\u00E1sobn\u00E9 (2 000 b.) a ka\u017Ed\u00FD t\u00FDm m\u00E1 2 \u017Dol\u00EDky k aktivaci p\u0159ed odesl\u00E1n\u00EDm.",
+    "\u017Dol\u00EDk n\u00E1sob\u00ED v\u00FDhru 2\u00D7, ale za \u0161patnou odpov\u011B\u010F ode\u010D\u00EDt\u00E1 polovinu z\u00E1kladn\u00EDch bod\u016F (-1 000 b.)."
+  ],
+  "settings": {
+    "defaultTimeLimitSeconds": 30,
+    "gracePeriodSeconds": 5,
+    "basePoints": 1000,
+    "speedBonusMax": 200,
+    "jokerMode": "PreSelect",
+    "jokerCount": 2,
+    "autoStartTimer": false
+  },
+  "bonusTasks": [
+    {
+      "id": "task-panak",
+      "title": "Runda pan\u00E1k\u016F pro cel\u00FD t\u00FDm",
+      "description": "Vedouc\u00ED t\u00FDmu objedn\u00E1 u baru pan\u00E1ka (nebo nealko shot) pro v\u0161echny \u010Dleny t\u00FDmu a uk\u00E1\u017Ee moder\u00E1torovi.",
+      "points": 300,
+      "maxCompletionsPerTeam": 2
+    },
+    {
+      "id": "task-pripitek",
+      "title": "T\u00FDmov\u00FD p\u0159\u00EDpitek s moder\u00E1torem",
+      "description": "Cel\u00FD t\u00FDm spole\u010Dn\u011B vymysl\u00ED origin\u00E1ln\u00ED ver\u0161ovan\u00FD p\u0159\u00EDpitek a p\u0159ednese jej p\u0159ed v\u0161emi.",
+      "points": 400,
+      "maxCompletionsPerTeam": 1
+    }
+  ],
+  "rounds": [
+    {
+      "roundNumber": 1,
+      "title": "Rozeh\u0159\u00E1t\u00ED a multim\u00E9dia",
+      "description": "4 uk\u00E1zkov\u00E9 ot\u00E1zky: v\u00FDb\u011Br A/B/C/D, audio uk\u00E1zka, obr\u00E1zek a \u0159azen\u00ED.",
+      "isFinal": false,
+      "pointMultiplier": 1,
+      "questions": [
+        {
+          "id": "d1-q1",
+          "type": "MultipleChoice",
+          "text": "Kter\u00FD film z\u00EDskal Oscara za nejlep\u0161\u00ED film za rok 2023?",
+          "options": [
+            "Barbie",
+            "Oppenheimer",
+            "Chud\u00E1\u010Dci",
+            "Zabij\u00E1ci rozkvetl\u00E9ho m\u011Bs\u00EDce"
+          ],
+          "correctAnswer": "Oppenheimer",
+          "hostNote": "Re\u017Eie Christopher Nolan, celkem 7 Oscar\u016F v\u010Detn\u011B re\u017Eie a herce v hlavn\u00ED roli (Cillian Murphy).",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "d1-q2",
+          "type": "TextInput",
+          "text": "Poznejte slavnou klasickou melodii v uk\u00E1zce (n\u00E1zev skladby nebo skladatel):",
+          "correctAnswer": "Ludwig van Beethoven \u2013 \u00D3da na radost (9. symfonie)",
+          "acceptedAnswers": [
+            "\u00D3da na radost",
+            "Oda na radost",
+            "Beethoven",
+            "Ludwig van Beethoven",
+            "9. symfonie",
+            "Dev\u00E1t\u00E1 symfonie"
+          ],
+          "hostNote": "Syntetizovan\u00E1 lok\u00E1ln\u00ED WAV uk\u00E1zka b\u011B\u017E\u00EDc\u00ED 100% offline. Hymna Evropsk\u00E9 unie! Pokud nap\u00ED\u0161ou jen \u0027Evropsk\u00E1 hymna\u0027, zva\u017Ete p\u016Fl bodu.",
+          "timeLimitSeconds": 35,
+          "media": {
+            "type": "audio",
+            "src": "media/ode-to-joy.wav",
+            "startSeconds": 0,
+            "endSeconds": 10,
+            "playbackMode": "duringQuestion",
+            "transcript": "Instrument\u00E1ln\u00ED klav\u00EDrn\u00ED/syntez\u00E1torov\u00E1 melodie \u00D3dy na radost (E-E-F-G-G-F-E-D-C-C-D-E-E-D-D)."
+          }
+        },
+        {
+          "id": "d1-q3",
+          "type": "TextInput",
+          "text": "Kter\u00E1 slavn\u00E1 \u010Desk\u00E1 hora s charakteristick\u00FDm vys\u00EDla\u010Dem je zobrazena na siluet\u011B?",
+          "correctAnswer": "Je\u0161t\u011Bd (1 012 m n. m.)",
+          "acceptedAnswers": [
+            "Je\u0161t\u011Bd",
+            "Jested",
+            "Hora Je\u0161t\u011Bd"
+          ],
+          "hostNote": "Horsk\u00FD hotel a televizn\u00ED vys\u00EDla\u010D navrhl architekt Karel Hub\u00E1\u010Dek, dokon\u010Den byl roku 1973 a z\u00EDskal Perretovu cenu.",
+          "timeLimitSeconds": 30,
+          "media": {
+            "type": "image",
+            "src": "media/jested-silhouette.svg",
+            "playbackMode": "duringQuestion",
+            "altText": "Stylizovan\u00E1 silueta ku\u017Eelov\u00E9 hory s rota\u010Dn\u00EDm hyperboloidn\u00EDm vys\u00EDla\u010Dem na vrcholu."
+          }
+        },
+        {
+          "id": "d1-q4",
+          "type": "Ordering",
+          "text": "Se\u0159a\u010Fte tyto \u010Desk\u00E9 vyn\u00E1lezy a objevy chronologicky od nejstar\u0161\u00EDho po nejnov\u011Bj\u0161\u00ED:",
+          "options": [
+            "Bleskosvod (Prokop Divi\u0161)",
+            "Krevn\u00ED skupiny (Jan Jansk\u00FD)",
+            "Slovo \u201Erobot\u201C (brat\u0159i \u010Capkov\u00E9)",
+            "M\u011Bkk\u00E9 kontaktn\u00ED \u010Do\u010Dky (Otto Wichterle)"
+          ],
+          "correctAnswer": "Bleskosvod (1754) \u2192 Krevn\u00ED skupiny (1907) \u2192 Robot (1920) \u2192 Kontaktn\u00ED \u010Do\u010Dky (1961)",
+          "correctOrder": [
+            "Bleskosvod (Prokop Divi\u0161)",
+            "Krevn\u00ED skupiny (Jan Jansk\u00FD)",
+            "Slovo \u201Erobot\u201C (brat\u0159i \u010Capkov\u00E9)",
+            "M\u011Bkk\u00E9 kontaktn\u00ED \u010Do\u010Dky (Otto Wichterle)"
+          ],
+          "hostNote": "Bleskosvod 1754, Jansk\u00FD 1907, R.U.R. 1920, \u010Do\u010Dkostroj ze stavebnice Merkur na \u0160t\u011Bdr\u00FD den 1961.",
+          "timeLimitSeconds": 40
+        }
+      ]
+    },
+    {
+      "roundNumber": 2,
+      "title": "Pivn\u00ED a hospodsk\u00E1 kultura",
+      "description": "4 ot\u00E1zky o zlatav\u00E9m moku, historii a tradic\u00EDch.",
+      "isFinal": false,
+      "pointMultiplier": 1,
+      "questions": [
+        {
+          "id": "d2-q1",
+          "type": "MultipleChoice",
+          "text": "V jak\u00E9m roce byla v Plzni uva\u0159ena prvn\u00ED v\u00E1rka spodn\u011B kva\u0161en\u00E9ho sv\u011Btl\u00E9ho le\u017E\u00E1ku Pilsner Urquell?",
+          "options": [
+            "1795",
+            "1842",
+            "1869",
+            "1901"
+          ],
+          "correctAnswer": "1842",
+          "hostNote": "5. \u0159\u00EDjna 1842 ji uva\u0159il bavorsk\u00FD sl\u00E1dek Josef Groll. Prvn\u00ED \u010Depov\u00E1n\u00ED prob\u011Bhlo 11. listopadu 1842.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "d2-q2",
+          "type": "TextInput",
+          "text": "Jak se odborn\u011B naz\u00FDv\u00E1 styl \u010Depov\u00E1n\u00ED piva v \u010CR, kdy je sklenice napln\u011Bna t\u00E9m\u011B\u0159 v\u00FDhradn\u011B hustou mokrou p\u011Bnou?",
+          "correctAnswer": "Ml\u00EDko",
+          "acceptedAnswers": [
+            "Ml\u00EDko",
+            "Mliko",
+            "Ml\u00E9ko"
+          ],
+          "hostNote": "Sladk\u00E1, jemn\u00E1 p\u011Bna bez velk\u00FDch bublin \u2013 pije se na ex a miluj\u00ED ji i \u0161tamgasti na z\u00E1v\u011Br ve\u010Dera.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "d2-q3",
+          "type": "Ordering",
+          "text": "Se\u0159a\u010Fte tato \u010Desk\u00E1 m\u011Bsta podle po\u010Dtu obyvatel od NEJV\u011AT\u0160\u00CDHO po NEJMEN\u0160\u00CD:",
+          "options": [
+            "Praha",
+            "Brno",
+            "Ostrava",
+            "Plze\u0148"
+          ],
+          "correctAnswer": "Praha \u2192 Brno \u2192 Ostrava \u2192 Plze\u0148",
+          "correctOrder": [
+            "Praha",
+            "Brno",
+            "Ostrava",
+            "Plze\u0148"
+          ],
+          "hostNote": "Praha (~1,38 mil.), Brno (~400 tis.), Ostrava (~285 tis.), Plze\u0148 (~185 tis.).",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "d2-q4",
+          "type": "MultipleChoice",
+          "text": "Kter\u00FD \u010Desk\u00FD spisovatel je autorem nesmrteln\u00E9 satiry Osudy dobr\u00E9ho voj\u00E1ka \u0160vejka?",
+          "options": [
+            "Karel \u010Capek",
+            "Jaroslav Ha\u0161ek",
+            "Bohumil Hrabal",
+            "Vladislav Van\u010Dura"
+          ],
+          "correctAnswer": "Jaroslav Ha\u0161ek",
+          "hostNote": "Po odhalen\u00ED zazn\u00ED kr\u00E1tk\u00E1 fanf\u00E1ra (uk\u00E1zka re\u017Eimu playbackMode: onReveal).",
+          "timeLimitSeconds": 25,
+          "media": {
+            "type": "audio",
+            "src": "media/fanfare-reveal.wav",
+            "startSeconds": 0,
+            "endSeconds": 3,
+            "playbackMode": "onReveal",
+            "transcript": "Kr\u00E1tk\u00E1 v\u00EDt\u011Bzn\u00E1 fanf\u00E1ra p\u0159ehr\u00E1van\u00E1 p\u0159i odhalen\u00ED odpov\u011Bdi."
+          }
+        }
+      ]
+    },
+    {
+      "roundNumber": 3,
+      "title": "Fin\u00E1lov\u00FD rozst\u0159el (\u017Dol\u00EDk 2\u00D7)",
+      "description": "4 fin\u00E1lov\u00E9 ot\u00E1zky za dvojn\u00E1sobek bod\u016F! Pou\u017Eijte sv\u00E9 2 \u017Dol\u00EDky moud\u0159e.",
+      "isFinal": true,
+      "pointMultiplier": 2,
+      "questions": [
+        {
+          "id": "df-q1",
+          "type": "MultipleChoice",
+          "text": "Kter\u00E1 planeta slune\u010Dn\u00ED soustavy m\u00E1 nejdel\u0161\u00ED den (rotace kolem vlastn\u00ED osy trv\u00E1 d\u00E9le ne\u017E jej\u00ED ob\u011Bh kolem Slunce)?",
+          "options": [
+            "Merkur",
+            "Venu\u0161e",
+            "Mars",
+            "Neptun"
+          ],
+          "correctAnswer": "Venu\u0161e",
+          "hostNote": "Siderick\u00FD den na Venu\u0161i trv\u00E1 ~243 pozemsk\u00FDch dn\u00ED, zat\u00EDmco rok jen 224,7 dne. Nav\u00EDc rotuje retrogr\u00E1dn\u011B!",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "df-q2",
+          "type": "TextInput",
+          "text": "Jak\u00E9 je chemick\u00E9 ozna\u010Den\u00ED (zna\u010Dka z periodick\u00E9 tabulky) pro zlato?",
+          "correctAnswer": "Au (Aurum)",
+          "acceptedAnswers": [
+            "Au"
+          ],
+          "hostNote": "Z latinsk\u00E9ho Aurum, protonov\u00E9 \u010D\u00EDslo 79.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "df-q3",
+          "type": "Ordering",
+          "text": "Se\u0159a\u010Fte tyto sv\u011Btov\u00E9 \u0159eky podle d\u00E9lky od NEJDEL\u0160\u00CD po NEJKRAT\u0160\u00CD:",
+          "options": [
+            "Nil",
+            "Amazonka",
+            "Jang-c\u2019-\u0165iang",
+            "Dunaj"
+          ],
+          "correctAnswer": "Nil (~6 650 km) \u2192 Amazonka (~6 400 km) \u2192 Jang-c\u2019-\u0165iang (~6 300 km) \u2192 Dunaj (~2 850 km)",
+          "correctOrder": [
+            "Nil",
+            "Amazonka",
+            "Jang-c\u2019-\u0165iang",
+            "Dunaj"
+          ],
+          "hostNote": "Pozn\u00E1mka: N\u011Bkter\u00E9 zdroje uv\u00E1d\u00ED Amazonku t\u011Bsn\u011B p\u0159ed Nilem; pokud n\u011Bkter\u00FD t\u00FDm prohod\u00ED jen prvn\u00ED dv\u011B, zva\u017Ete \u00BD bodu!",
+          "timeLimitSeconds": 35
+        },
+        {
+          "id": "df-q4",
+          "type": "TextInput",
+          "text": "Kter\u00E1 britsk\u00E1 kapela nahr\u00E1la legend\u00E1rn\u00ED album \u201EThe Dark Side of the Moon\u201C (1973)?",
+          "correctAnswer": "Pink Floyd",
+          "acceptedAnswers": [
+            "Pink Floyd"
+          ],
+          "hostNote": "Album se udr\u017Eelo v \u017Eeb\u0159\u00ED\u010Dku Billboard 200 rekordn\u00EDch v\u00EDce ne\u017E 900 t\u00FDdn\u016F. Ikonick\u00FD p\u0159ebal s hranolem vytvo\u0159ilo studio Hipgnosis.",
+          "timeLimitSeconds": 30,
+          "media": {
+            "type": "image",
+            "src": "media/prism-hint.svg",
+            "playbackMode": "onReveal",
+            "altText": "Stylizovan\u00FD sv\u011Bteln\u00FD paprsek proch\u00E1zej\u00EDc\u00ED sklen\u011Bn\u00FDm hranolem a rozkl\u00E1daj\u00EDc\u00ED se na duhov\u00E9 spektrum."
+          }
+        }
+      ]
+    }
+  ]
+}

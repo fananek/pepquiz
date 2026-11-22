@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SpaRoot>../PubQuiz.Client</SpaRoot>
+    <SkipFrontendBuild Condition="'$(SkipFrontendBuild)' == ''">false</SkipFrontendBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- 100% cross-platform MSBuild integration running pnpm directly (Windows, Linux, macOS) -->
+  <Target Name="CheckPnpmInstalled" BeforeTargets="BuildFrontend" Condition="'$(SkipFrontendBuild)' != 'true'">
+    <Exec Command="pnpm --version" ContinueOnError="true" StandardOutputImportance="low" StandardErrorImportance="low">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmExitCode" />
+    </Exec>
+    <Error Condition="'$(PnpmExitCode)' != '0'" Text="pnpm is required to build the frontend. Install pnpm (https://pnpm.io/installation) or build with -p:SkipFrontendBuild=true." />
+  </Target>
+
+  <Target Name="InstallFrontendDependencies" BeforeTargets="BuildFrontend" DependsOnTargets="CheckPnpmInstalled" Condition="'$(SkipFrontendBuild)' != 'true' AND !Exists('$(SpaRoot)/node_modules')">
+    <Message Importance="high" Text="Installing frontend dependencies with pnpm..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="pnpm install --frozen-lockfile" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="FrozenInstallExitCode" />
+    </Exec>
+    <Exec WorkingDirectory="$(SpaRoot)" Command="pnpm install" Condition="'$(FrozenInstallExitCode)' != '0'" />
+  </Target>
+
+  <Target Name="BuildFrontend" BeforeTargets="BeforeBuild;ComputeFilesToPublish" DependsOnTargets="InstallFrontendDependencies" Condition="'$(SkipFrontendBuild)' != 'true' AND ('$(Configuration)' == 'Release' OR !Exists('wwwroot/index.html') OR '$(ForceFrontendBuild)' == 'true')">
+    <Message Importance="high" Text="Building React frontend with pnpm..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="pnpm run build" />
+    <ItemGroup>
+      <DistFiles Include="wwwroot/**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>wwwroot/%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>

@@ -1,0 +1,25 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+
+# Node / pnpm
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+src/PubQuiz.Server/wwwroot/
+
+# Runtime session state, secrets & local TLS certificates
+state/
+*.pfx
+*.p12
+*.key
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

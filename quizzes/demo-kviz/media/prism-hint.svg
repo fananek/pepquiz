@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Hranol rozkládající světelný paprsek na duhové spektrum">
+  <rect width="800" height="450" fill="#090b10"/>
+  <!-- Incoming white beam -->
+  <polygon points="0,275 332,202 336,214 0,290" fill="#f8fafc"/>
+  <!-- Rainbow spectrum exiting right -->
+  <polygon points="444,185 800,145 800,170 448,197" fill="#ef4444"/>
+  <polygon points="448,197 800,170 800,195 452,209" fill="#f97316"/>
+  <polygon points="452,209 800,195 800,220 456,221" fill="#eab308"/>
+  <polygon points="456,221 800,220 800,245 460,233" fill="#22c55e"/>
+  <polygon points="460,233 800,245 800,270 464,245" fill="#3b82f6"/>
+  <polygon points="464,245 800,270 800,295 468,257" fill="#8b5cf6"/>
+  <!-- Glass prism -->
+  <polygon points="400,85 520,325 280,325" fill="#111827" stroke="#f8fafc" stroke-width="6"/>
+  <polygon points="334,205 446,185 466,257 334,214" fill="#ffffff" opacity="0.16"/>
+</svg>

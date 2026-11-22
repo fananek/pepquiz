@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Silueta hory s hyperboloidním vysílačem">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="65%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#sky)"/>
+  <circle cx="620" cy="110" r="46" fill="#fef3c7" opacity="0.88"/>
+  <!-- Mountain silhouette -->
+  <path d="M0 450 L0 365 L145 310 L290 245 L368 205 L432 205 L515 250 L660 325 L800 375 L800 450 Z" fill="#0f172a"/>
+  <!-- Iconic hyperboloid tower continuing mountain slope -->
+  <path d="M368 206 Q390 155 393 108 L407 108 Q410 155 432 206 Z" fill="#0f172a"/>
+  <!-- Antenna mast -->
+  <rect x="398" y="42" width="4" height="68" fill="#0f172a"/>
+  <!-- Warm glowing hotel windows band -->
+  <path d="M376 191 L424 191 L421 182 L379 182 Z" fill="#fbbf24" opacity="0.9"/>
+  <path d="M382 174 L418 174 L416 167 L384 167 Z" fill="#fde68a" opacity="0.75"/>
+</svg>

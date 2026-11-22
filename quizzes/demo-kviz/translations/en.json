@@ -1,0 +1,115 @@
+{
+  "language": "en",
+  "title": "Quick Demo Quiz (All Features)",
+  "description": "Short showcase quiz featuring all question types, offline media, EN translation, and Final Round Jokers.",
+  "rules": [
+    "Standard questions award 1,000 base points + up to 200 speed bonus (decays after a 5s reading grace period).",
+    "Open text answers forgive small typos and accents; the host can also award half points.",
+    "Final Round questions award double points (2,000) and each team has 2 Jokers to activate before submitting.",
+    "A Joker doubles your winnings (2×), while a wrong answer deducts half the base points (-1,000)."
+  ],
+  "rounds": {
+    "1": {
+      "title": "Warm-up & Multimedia",
+      "description": "4 demo questions: multiple choice, audio clip, image, and ordering."
+    },
+    "2": {
+      "title": "Pub & Czech Culture",
+      "description": "4 questions about beer heritage, cities, and literature."
+    },
+    "3": {
+      "title": "Final Showdown (2× Joker)",
+      "description": "4 double-point finale questions! Use your 2 Jokers wisely."
+    }
+  },
+  "bonusTasks": {
+    "task-panak": {
+      "title": "Round of shots for the whole team",
+      "description": "The team leader orders a round of shots (alcoholic or non-alcoholic) for everyone at the table and shows the host."
+    },
+    "task-pripitek": {
+      "title": "Original rhyming team toast",
+      "description": "The team composes an original rhyming toast and delivers it to the host and room."
+    }
+  },
+  "questions": {
+    "d1-q1": {
+      "text": "Which film won the Academy Award for Best Picture for 2023?",
+      "options": ["Barbie", "Oppenheimer", "Poor Things", "Killers of the Flower Moon"],
+      "correctAnswer": "Oppenheimer",
+      "hostNote": "Directed by Christopher Nolan; won 7 Oscars in total."
+    },
+    "d1-q2": {
+      "text": "Identify this famous classical melody (title or composer):",
+      "acceptedAnswers": ["Ode to Joy", "Beethoven", "Ludwig van Beethoven", "9th Symphony", "Ninth Symphony"],
+      "correctAnswer": "Ludwig van Beethoven – Ode to Joy (9th Symphony)",
+      "hostNote": "100% offline synthesized WAV clip. Also the official Anthem of Europe.",
+      "mediaTranscript": "Instrumental synth melody of Beethoven's Ode to Joy."
+    },
+    "d1-q3": {
+      "text": "Which iconic Czech mountain with its hyperboloid TV tower is shown in this silhouette?",
+      "acceptedAnswers": ["Jested", "Ještěd"],
+      "correctAnswer": "Ještěd (1,012 m)",
+      "hostNote": "Designed by architect Karel Hubáček, completed in 1973.",
+      "mediaAltText": "Stylized silhouette of a conical mountain topped by a sleek hyperboloid tower."
+    },
+    "d1-q4": {
+      "text": "Sort these Czech inventions and milestones chronologically from OLDEST to NEWEST:",
+      "options": [
+        "Lightning rod (Prokop Diviš)",
+        "Four blood types (Jan Janský)",
+        "The word 'robot' (Čapek brothers)",
+        "Soft contact lenses (Otto Wichterle)"
+      ],
+      "correctOrder": [
+        "Lightning rod (Prokop Diviš)",
+        "Four blood types (Jan Janský)",
+        "The word 'robot' (Čapek brothers)",
+        "Soft contact lenses (Otto Wichterle)"
+      ],
+      "correctAnswer": "Lightning rod (1754) → Blood types (1907) → Robot (1920) → Contact lenses (1961)"
+    },
+    "d2-q1": {
+      "text": "In which year was the first batch of Pilsner Urquell pale lager brewed in Plzeň?",
+      "options": ["1795", "1842", "1869", "1901"],
+      "correctAnswer": "1842"
+    },
+    "d2-q2": {
+      "text": "What is the Czech name for the beer pour consisting almost entirely of dense wet foam?",
+      "acceptedAnswers": ["Mliko", "Mlíko", "Milk"],
+      "correctAnswer": "Mlíko"
+    },
+    "d2-q3": {
+      "text": "Order these Czech cities by population from LARGEST to SMALLEST:",
+      "options": ["Prague", "Brno", "Ostrava", "Plzeň"],
+      "correctOrder": ["Prague", "Brno", "Ostrava", "Plzeň"],
+      "correctAnswer": "Prague → Brno → Ostrava → Plzeň"
+    },
+    "d2-q4": {
+      "text": "Which Czech author wrote the satirical classic 'The Good Soldier Švejk'?",
+      "options": ["Karel Čapek", "Jaroslav Hašek", "Bohumil Hrabal", "Vladislav Vančura"],
+      "correctAnswer": "Jaroslav Hašek"
+    },
+    "df-q1": {
+      "text": "Which planet in our Solar System has a sidereal day longer than its own year?",
+      "options": ["Mercury", "Venus", "Mars", "Neptune"],
+      "correctAnswer": "Venus"
+    },
+    "df-q2": {
+      "text": "What is the chemical symbol for gold on the periodic table?",
+      "acceptedAnswers": ["Au"],
+      "correctAnswer": "Au (Aurum)"
+    },
+    "df-q3": {
+      "text": "Order these world rivers from LONGEST to SHORTEST:",
+      "options": ["Nile", "Amazon", "Yangtze", "Danube"],
+      "correctOrder": ["Nile", "Amazon", "Yangtze", "Danube"],
+      "correctAnswer": "Nile → Amazon → Yangtze → Danube"
+    },
+    "df-q4": {
+      "text": "Which British rock band released the iconic 1973 album 'The Dark Side of the Moon'?",
+      "acceptedAnswers": ["Pink Floyd"],
+      "correctAnswer": "Pink Floyd"
+    }
+  }
+}

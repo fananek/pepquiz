@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pubquiz-engine.local/schemas/quiz.schema.json",
+  "title": "PubQuiz Engine Quiz Package",
+  "type": "object",
+  "required": ["id", "title", "settings", "rounds"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": ["string", "null"] },
+    "defaultLanguage": { "type": "string", "default": "cs" },
+    "rules": {
+      "type": ["array", "null"],
+      "items": { "type": "string" }
+    },
+    "settings": {
+      "type": "object",
+      "required": ["defaultTimeLimitSeconds", "gracePeriodSeconds", "basePoints", "speedBonusMax"],
+      "properties": {
+        "defaultTimeLimitSeconds": { "type": "integer", "minimum": 5, "default": 30 },
+        "gracePeriodSeconds": { "type": "integer", "minimum": 0, "default": 5 },
+        "basePoints": { "type": "integer", "minimum": 0, "default": 1000 },
+        "speedBonusMax": { "type": "integer", "minimum": 0, "default": 200 },
+        "jokerMode": { "type": "string", "enum": ["OnDemand", "PreSelect"], "default": "OnDemand" },
+        "jokerCount": { "type": "integer", "minimum": 0, "maximum": 10, "default": 2 },
+        "autoStartTimer": { "type": "boolean", "default": false },
+        "textMatchMaxDistance": { "type": ["integer", "null"], "minimum": 0, "maximum": 5 }
+      }
+    },
+    "bonusTasks": {
+      "type": "array",
+      "description": "Bonusové úkoly, jejichž splnění vedoucí týmu hlásí moderátorovi ke schválení bodů.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "points", "maxCompletionsPerTeam"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "description": { "type": ["string", "null"] },
+          "points": { "type": "integer", "minimum": 0, "default": 300 },
+          "maxCompletionsPerTeam": { "type": "integer", "minimum": 1, "maximum": 50, "default": 1 }
+        }
+      }
+    },
+    "rounds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["roundNumber", "title", "questions"],
+        "properties": {
+          "roundNumber": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string" },
+          "description": { "type": ["string", "null"] },
+          "isFinal": { "type": "boolean", "default": false },
+          "pointMultiplier": { "type": "number", "minimum": 0.5, "default": 1.0 },
+          "questions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "text"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "type": { "type": "string", "enum": ["MultipleChoice", "TextInput", "Ordering"] },
+                "text": { "type": "string", "minLength": 1 },
+                "options": { "type": ["array", "null"], "items": { "type": "string" } },
+                "correctAnswer": { "type": ["string", "null"] },
+                "acceptedAnswers": { "type": ["array", "null"], "items": { "type": "string" } },
+                "correctOrder": { "type": ["array", "null"], "items": { "type": "string" } },
+                "hostNote": { "type": ["string", "null"] },
+                "timeLimitSeconds": { "type": ["integer", "null"], "minimum": 5 },
+                "basePoints": { "type": ["integer", "null"], "minimum": 0 },
+                "speedBonusMax": { "type": ["integer", "null"], "minimum": 0 },
+                "gracePeriodSeconds": { "type": ["integer", "null"], "minimum": 0 },
+                "media": {
+                  "type": ["object", "null"],
+                  "required": ["type", "src"],
+                  "properties": {
+                    "type": { "type": "string", "enum": ["audio", "video", "image", "youtube"] },
+                    "src": { "type": "string" },
+                    "startSeconds": { "type": ["number", "null"], "minimum": 0 },
+                    "endSeconds": { "type": ["number", "null"], "minimum": 0 },
+                    "playbackMode": { "type": "string", "enum": ["duringQuestion", "onReveal"], "default": "duringQuestion" },
+                    "altText": { "type": ["string", "null"] },
+                    "transcript": { "type": ["string", "null"] },
+                    "captionsSrc": { "type": ["string", "null"] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

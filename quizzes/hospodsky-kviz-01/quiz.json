@@ -1,0 +1,783 @@
+{
+  "$schema": "../schema/quiz.schema.json",
+  "id": "hospodsky-kviz-01",
+  "title": "Podzimní hospodský speciál (70 otázek)",
+  "description": "Klasický celovečerní hospodský kvíz: 5 základních kol po 12 otázkách + 10otázkové finále o dvojnásobné body.",
+  "defaultLanguage": "cs",
+  "rules": [
+    "Hrajeme 5 základních kol po 12 otázkách (1 000 b. za otázku) a 1 finálové kolo o 10 otázkách (2 000 b.).",
+    "Rychlostní bonus až +200 bodů se začíná odpočítávat po 5 sekundách na přečtení otázky.",
+    "U otevřených odpovědí systém toleruje překlepy a chybějící diakritiku; sporné odpovědi řeší moderátor.",
+    "Před startem finálového kola si každý tým na mobilu naslepo vybere 2 otázky pro Žolíka (2× body / -50 % za chybu).",
+    "Mobily u stolu slouží jen k odesílání odpovědí – nehledejte nápovědy na internetu!"
+  ],
+  "settings": {
+    "defaultTimeLimitSeconds": 30,
+    "gracePeriodSeconds": 5,
+    "basePoints": 1000,
+    "speedBonusMax": 200,
+    "jokerMode": "PreSelect",
+    "jokerCount": 2,
+    "autoStartTimer": false
+  },
+  "rounds": [
+    {
+      "roundNumber": 1,
+      "title": "Všeobecný přehled",
+      "description": "12 otázek na rozehřátí ze světa, dějin i běžného života.",
+      "isFinal": false,
+      "pointMultiplier": 1.0,
+      "questions": [
+        {
+          "id": "r1-q1",
+          "type": "MultipleChoice",
+          "text": "Který film získal Oscara za nejlepší film za rok 2023?",
+          "options": ["Barbie", "Oppenheimer", "Chudáčci", "Zabijáci rozkvetlého měsíce"],
+          "correctAnswer": "Oppenheimer",
+          "hostNote": "Režie Christopher Nolan, celkem 7 Oscarů.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r1-q2",
+          "type": "MultipleChoice",
+          "text": "Které město je hlavním městem Austrálie?",
+          "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+          "correctAnswer": "Canberra",
+          "hostNote": "Vznikla jako kompromis mezi rivaly Sydney a Melbourne v roce 1913.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r1-q3",
+          "type": "TextInput",
+          "text": "Jak se jmenuje nejvyšší hora Afriky?",
+          "acceptedAnswers": ["Kilimandžáro", "Kilimanjaro", "Uhuru"],
+          "correctAnswer": "Kilimandžáro",
+          "hostNote": "Leží v Tanzanii a měří 5 895 m n. m. Nejvyšší bod se jmenuje Uhuru.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "r1-q4",
+          "type": "MultipleChoice",
+          "text": "Kolik strun má standardní koncertní kytara?",
+          "options": ["4", "5", "6", "7"],
+          "correctAnswer": "6",
+          "hostNote": "Standardní ladění E-A-D-G-H-E.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r1-q5",
+          "type": "TextInput",
+          "text": "Který řecký bůh vládl mořím a jeho symbolem je trojzubec?",
+          "acceptedAnswers": ["Poseidón", "Poseidon"],
+          "correctAnswer": "Poseidón",
+          "hostNote": "Římský protějšek je Neptun – pokud někdo napíše Neptun, je to římský bůh (zvažte 0 nebo ½ bodu).",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r1-q6",
+          "type": "Ordering",
+          "text": "Seřaďte tyto historické události chronologicky od NEJSTARŠÍ po NEJNOVĚJŠÍ:",
+          "options": [
+            "Založení Univerzity Karlovy",
+            "Objevení Ameriky Kryštofem Kolumbem",
+            "Velká francouzská revoluce",
+            "Přistání Apolla 11 na Měsíci"
+          ],
+          "correctOrder": [
+            "Založení Univerzity Karlovy",
+            "Objevení Ameriky Kryštofem Kolumbem",
+            "Velká francouzská revoluce",
+            "Přistání Apolla 11 na Měsíci"
+          ],
+          "correctAnswer": "UK (1348) → Amerika (1492) → Francouzská revoluce (1789) → Apollo 11 (1969)",
+          "hostNote": "1348, 1492, 1789, 1969.",
+          "timeLimitSeconds": 35
+        },
+        {
+          "id": "r1-q7",
+          "type": "MultipleChoice",
+          "text": "Která z těchto krevních skupin je považována za univerzálního dárce červených krvinek?",
+          "options": ["AB+", "0-", "A+", "B-"],
+          "correctAnswer": "0-",
+          "hostNote": "Erytrocyty 0 Rh negativní nenesou antigeny A, B ani RhD.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r1-q8",
+          "type": "TextInput",
+          "text": "Jaká měna se oficiálně používá v Japonsku?",
+          "acceptedAnswers": ["Jen", "Japonský jen", "Yen", "JPY"],
+          "correctAnswer": "Japonský jen (JPY)",
+          "hostNote": "Symbol ¥.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r1-q9",
+          "type": "MultipleChoice",
+          "text": "Který malíř vytvořil slavný obraz „Hvězdná noc“ (1889)?",
+          "options": ["Claude Monet", "Pablo Picasso", "Vincent van Gogh", "Salvador Dalí"],
+          "correctAnswer": "Vincent van Gogh",
+          "hostNote": "Namaloval jej z okna léčebny v Saint-Rémy-de-Provence.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r1-q10",
+          "type": "TextInput",
+          "text": "Jak se nazývá hlavní surovina (plodina), ze které se tradičně vaří japonské saké?",
+          "acceptedAnswers": ["Rýže", "Ryze"],
+          "correctAnswer": "Rýže",
+          "hostNote": "Technologicky má saké blíž k pivu než k vínu – vzniká kvašením zcukernatělého škrobu.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r1-q11",
+          "type": "MultipleChoice",
+          "text": "Kolik hráčů jednoho týmu je při standardním zápase volejbalu současně na hřišti?",
+          "options": ["5", "6", "7", "8"],
+          "correctAnswer": "6",
+          "hostNote": "V plážovém volejbalu 2, v klasickém šestkovém 6.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r1-q12",
+          "type": "TextInput",
+          "text": "Který stát má na své vlajce uprostřed červený javorový list?",
+          "acceptedAnswers": ["Kanada", "Canada"],
+          "correctAnswer": "Kanada",
+          "hostNote": "Současná podoba vlajky byla přijata v roce 1965.",
+          "timeLimitSeconds": 20
+        }
+      ]
+    },
+    {
+      "roundNumber": 2,
+      "title": "Film, seriály a popkultura",
+      "description": "12 otázek ze stříbrného plátna, českých klasik i světových seriálů.",
+      "isFinal": false,
+      "pointMultiplier": 1.0,
+      "questions": [
+        {
+          "id": "r2-q1",
+          "type": "MultipleChoice",
+          "text": "Který český film režiséra Jana Svěráka získal v roce 1997 Oscara za nejlepší cizojazyčný film?",
+          "options": ["Obecná škola", "Kolja", "Tmavomodrý svět", "Vratné lahve"],
+          "correctAnswer": "Kolja",
+          "hostNote": "Hlavní role Zdeněk Svěrák a Andrej Chalimon.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r2-q2",
+          "type": "TextInput",
+          "text": "Jak se jmenuje smyšlené město, ve kterém žije rodina Simpsonových?",
+          "acceptedAnswers": ["Springfield"],
+          "correctAnswer": "Springfield",
+          "hostNote": "Sousední rivalské město je Shelbyville.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r2-q3",
+          "type": "MultipleChoice",
+          "text": "Kdo ztvárnil ikonickou roli kapitána Jacka Sparrowa v sérii Piráti z Karibiku?",
+          "options": ["Orlando Bloom", "Johnny Depp", "Geoffrey Rush", "Javier Bardem"],
+          "correctAnswer": "Johnny Depp",
+          "hostNote": "Projev Jacka Sparrowa prý inspiroval kytarista Rolling Stones Keith Richards.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r2-q4",
+          "type": "TextInput",
+          "text": "Jaké je příjmení hlavního hrdiny českého filmu Pelíšky, kterého hraje Jiří Kodet (otce Jindřišky)?",
+          "acceptedAnswers": ["Kraus", "Krausovi"],
+          "correctAnswer": "Kraus (Jindřich Kraus)",
+          "hostNote": "„Proletáři všech zemí, vyližte si prdel!“ Druhá rodina v domě jsou Šebkovi.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "r2-q5",
+          "type": "MultipleChoice",
+          "text": "V jakém roce měl premiéru první díl filmové trilogie Pán prstenů: Společenstvo Prstenu?",
+          "options": ["1999", "2001", "2003", "2005"],
+          "correctAnswer": "2001",
+          "hostNote": "Dvě věže 2002, Návrat krále 2003 (11 Oscarů).",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r2-q6",
+          "type": "Ordering",
+          "text": "Seřaďte tyto slavné filmy režiséra Quentina Tarantina podle roku premiéry od NEJSTARŠÍHO po NEJNOVĚJŠÍ:",
+          "options": ["Pulp Fiction", "Kill Bill", "Hanebný pancharti", "Tenkrát v Hollywoodu"],
+          "correctOrder": ["Pulp Fiction", "Kill Bill", "Hanebný pancharti", "Tenkrát v Hollywoodu"],
+          "correctAnswer": "Pulp Fiction (1994) → Kill Bill (2003) → Hanebný pancharti (2009) → Tenkrát v Hollywoodu (2019)",
+          "hostNote": "1994, 2003, 2009, 2019.",
+          "timeLimitSeconds": 35
+        },
+        {
+          "id": "r2-q7",
+          "type": "TextInput",
+          "text": "Jak se jmenuje kavárna v New Yorku, kde se schází šestice kamarádů v seriálu Přátelé (Friends)?",
+          "acceptedAnswers": ["Central Perk"],
+          "correctAnswer": "Central Perk",
+          "hostNote": "Obsluhoval tam Gunther zamilovaný do Rachel.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r2-q8",
+          "type": "MultipleChoice",
+          "text": "Ve které koleji Bradavic byl zařazen Harry Potter?",
+          "options": ["Zmijozel", "Mrzimor", "Nebelvír", "Havraspár"],
+          "correctAnswer": "Nebelvír",
+          "hostNote": "Moudrý klobouk zvažoval i Zmijozel, ale Harry si přál Nebelvír.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r2-q9",
+          "type": "TextInput",
+          "text": "Jak se jmenuje chemik a učitel v seriálu Perníkový táta (Breaking Bad), který přijme přezdívku Heisenberg?",
+          "acceptedAnswers": ["Walter White", "White"],
+          "correctAnswer": "Walter White",
+          "hostNote": "Hrál ho Bryan Cranston.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r2-q10",
+          "type": "MultipleChoice",
+          "text": "Kdo složil slavnou filmovou hudbu k filmům Star Wars, Jurský park a Indiana Jones?",
+          "options": ["Hans Zimmer", "Ennio Morricone", "John Williams", "Howard Shore"],
+          "correctAnswer": "John Williams",
+          "hostNote": "Držitel 5 Oscarů a více než 50 nominací!",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r2-q11",
+          "type": "TextInput",
+          "text": "Z jakého českého kultovního filmu pochází hláška „Hliník se odstěhoval do Humpolce“?",
+          "acceptedAnswers": ["Marečku, podejte mi pero", "Marecku podejte mi pero", "Marečku podejte mi pero!"],
+          "correctAnswer": "Marečku, podejte mi pero! (1976)",
+          "hostNote": "Režie Oldřich Lipský, scénář Zdeněk Svěrák a Ladislav Smoljak.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r2-q12",
+          "type": "MultipleChoice",
+          "text": "Který animovaný film studia Pixar sleduje dobrodružství starého pána Carla, který přiváže k domu tisíce balónků?",
+          "options": ["V hlavě", "Vzhůru do oblak", "Coco", "Ratatouille"],
+          "correctAnswer": "Vzhůru do oblak",
+          "hostNote": "Originální název Up (2009), režie Pete Docter.",
+          "timeLimitSeconds": 20
+        }
+      ]
+    },
+    {
+      "roundNumber": 3,
+      "title": "Hudba a zvuky",
+      "description": "12 hudebních otázek včetně lokálních poslechových ukázek.",
+      "isFinal": false,
+      "pointMultiplier": 1.0,
+      "questions": [
+        {
+          "id": "r3-q1",
+          "type": "TextInput",
+          "text": "Poznejte klasickou melodii v ukázce (skladba nebo autor):",
+          "acceptedAnswers": ["Óda na radost", "Oda na radost", "Beethoven", "Ludwig van Beethoven", "9. symfonie"],
+          "correctAnswer": "Ludwig van Beethoven – Óda na radost",
+          "hostNote": "Lokální offline audio ukázka.",
+          "timeLimitSeconds": 35,
+          "media": {
+            "type": "audio",
+            "src": "media/ode-to-joy.wav",
+            "startSeconds": 0,
+            "endSeconds": 10,
+            "playbackMode": "duringQuestion",
+            "transcript": "Melodie Ódy na radost od Ludwiga van Beethovena."
+          }
+        },
+        {
+          "id": "r3-q2",
+          "type": "TextInput",
+          "text": "Který český skladatel složil cyklus symfonických básní Má vlast, z něhož pochází tato melodie?",
+          "acceptedAnswers": ["Bedřich Smetana", "Smetana", "Vltava"],
+          "correctAnswer": "Bedřich Smetana (Vltava)",
+          "hostNote": "Poznají Vltavu? Uznáváme Smetanu i název Vltava (zvažte přísně jen autora dle znění).",
+          "timeLimitSeconds": 35,
+          "media": {
+            "type": "audio",
+            "src": "media/vltava-theme.wav",
+            "startSeconds": 0,
+            "endSeconds": 11,
+            "playbackMode": "duringQuestion",
+            "transcript": "Hlavní téma symfonické básně Vltava od Bedřicha Smetany v e moll."
+          }
+        },
+        {
+          "id": "r3-q3",
+          "type": "MultipleChoice",
+          "text": "Kdo byl frontmanem britské rockové skupiny Queen?",
+          "options": ["David Bowie", "Freddie Mercury", "Mick Jagger", "Robert Plant"],
+          "correctAnswer": "Freddie Mercury",
+          "hostNote": "Rodným jménem Farrokh Bulsara, narozen na Zanzibaru.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r3-q4",
+          "type": "TextInput",
+          "text": "Jak se jmenuje zpěvák přezdívaný „Král popu“, autor alba Thriller?",
+          "acceptedAnswers": ["Michael Jackson", "Jackson"],
+          "correctAnswer": "Michael Jackson",
+          "hostNote": "Thriller (1982) je nejprodávanějším albem hudební historie.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r3-q5",
+          "type": "MultipleChoice",
+          "text": "Která švédská skupina vyhrála Eurovizi v roce 1974 s písní Waterloo?",
+          "options": ["Roxette", "ABBA", "Ace of Base", "Europe"],
+          "correctAnswer": "ABBA",
+          "hostNote": "Soutěž se konala v britském Brightonu.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r3-q6",
+          "type": "TextInput",
+          "text": "Poznejte slavnou klavírní miniaturu v ukázce (název skladby):",
+          "acceptedAnswers": ["Pro Elišku", "Pro Elisku", "Für Elise", "Fur Elise", "Beethoven"],
+          "correctAnswer": "Pro Elišku (Für Elise – L. van Beethoven)",
+          "hostNote": "Skladba WoO 59 z roku 1810.",
+          "timeLimitSeconds": 35,
+          "media": {
+            "type": "audio",
+            "src": "media/fur-elise.wav",
+            "startSeconds": 0,
+            "endSeconds": 9,
+            "playbackMode": "duringQuestion",
+            "transcript": "Známý klavírní motiv E-D#-E-D#-E-H-D-C-A skladby Pro Elišku."
+          }
+        },
+        {
+          "id": "r3-q7",
+          "type": "MultipleChoice",
+          "text": "Ze kterého města pocházela slavná kapela The Beatles?",
+          "options": ["Londýn", "Manchester", "Liverpool", "Birmingham"],
+          "correctAnswer": "Liverpool",
+          "hostNote": "Začínali v legendárním klubu The Cavern Club.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r3-q8",
+          "type": "TextInput",
+          "text": "Která česká rocková kapela stojí za hity „Pohoda“, „Burlaci“ a „Malá dáma“?",
+          "acceptedAnswers": ["Kabát", "Kabat"],
+          "correctAnswer": "Kabát",
+          "hostNote": "Teplická kapela v nezměněné sestavě od roku 1989.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r3-q9",
+          "type": "Ordering",
+          "text": "Seřaďte tato hudební média chronologicky podle toho, kdy se masově rozšířila (od NEJSTARŠÍHO po NEJNOVĚJŠÍ):",
+          "options": ["Gramofonová LP deska", "Magnetofonová kazeta", "Kompaktní disk (CD)", "Streamovací služba Spotify"],
+          "correctOrder": ["Gramofonová LP deska", "Magnetofonová kazeta", "Kompaktní disk (CD)", "Streamovací služba Spotify"],
+          "correctAnswer": "LP (1948) → Kazeta (1963) → CD (1982) → Spotify (2008)",
+          "hostNote": "Vinyl LP 1948, Philips kazeta 1963, CD 1982, Spotify start 2008.",
+          "timeLimitSeconds": 35
+        },
+        {
+          "id": "r3-q10",
+          "type": "MultipleChoice",
+          "text": "Který český písničkář napsal píseň „Bratříčku, zavírej vrátka“?",
+          "options": ["Jaromír Nohavica", "Karel Kryl", "Karel Plíhal", "Wabi Daněk"],
+          "correctAnswer": "Karel Kryl",
+          "hostNote": "Napsána bezprostředně po srpnové invazi v roce 1968.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r3-q11",
+          "type": "TextInput",
+          "text": "Kolik černých a bílých kláves dohromady má standardní koncertní klavír?",
+          "acceptedAnswers": ["88"],
+          "correctAnswer": "88 kláves (52 bílých a 36 černých)",
+          "hostNote": "Rozsah 7 a čtvrt oktávy (A0 až C8).",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r3-q12",
+          "type": "MultipleChoice",
+          "text": "Který světový hudební festival se každoročně koná v Ostravě v areálu Dolních Vítkovic?",
+          "options": ["Rock for People", "Colours of Ostrava", "Metronome Prague", "Masters of Rock"],
+          "correctAnswer": "Colours of Ostrava",
+          "hostNote": "Po odhalení zazní fanfára na závěr hudebního kola.",
+          "timeLimitSeconds": 20,
+          "media": {
+            "type": "audio",
+            "src": "media/fanfare-reveal.wav",
+            "startSeconds": 0,
+            "endSeconds": 3,
+            "playbackMode": "onReveal",
+            "transcript": "Fanfára na závěr hudebního kola."
+          }
+        }
+      ]
+    },
+    {
+      "roundNumber": 4,
+      "title": "Česko, zeměpis a příroda",
+      "description": "12 otázek o naší republice, světových zajímavostech a přírodních rekordech.",
+      "isFinal": false,
+      "pointMultiplier": 1.0,
+      "questions": [
+        {
+          "id": "r4-q1",
+          "type": "TextInput",
+          "text": "Kterou slavnou českou horu s vysílačem vidíte na obrázku?",
+          "acceptedAnswers": ["Ještěd", "Jested"],
+          "correctAnswer": "Ještěd",
+          "hostNote": "Architekt Karel Hubáček, Liberec.",
+          "timeLimitSeconds": 25,
+          "media": {
+            "type": "image",
+            "src": "media/jested-silhouette.svg",
+            "playbackMode": "duringQuestion",
+            "altText": "Silueta hory Ještěd s charakteristickým hyperboloidním vysílačem."
+          }
+        },
+        {
+          "id": "r4-q2",
+          "type": "MultipleChoice",
+          "text": "Která řeka je nejdelší na území České republiky?",
+          "options": ["Labe", "Vltava", "Morava", "Ohře"],
+          "correctAnswer": "Vltava",
+          "hostNote": "Vltava měří 430 km (celá v ČR), Labe má na území ČR cca 370 km.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r4-q3",
+          "type": "TextInput",
+          "text": "Kolik samosprávných krajů má Česká republika (včetně Hlavního města Prahy)?",
+          "acceptedAnswers": ["14"],
+          "correctAnswer": "14",
+          "hostNote": "13 krajů + Hlavní město Praha, zřízeny od roku 2000.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r4-q4",
+          "type": "MultipleChoice",
+          "text": "Který z českých národních parků je rozlohou největší?",
+          "options": ["Krkonošský národní park", "Národní park Šumava", "Národní park Podyjí", "České Švýcarsko"],
+          "correctAnswer": "Národní park Šumava",
+          "hostNote": "Šumava má cca 680 km², KRNAP 363 km².",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r4-q5",
+          "type": "TextInput",
+          "text": "Jak se jmenuje nejhlubší zatopená propast světa, která se nachází v České republice u Teplic nad Bečvou?",
+          "acceptedAnswers": ["Hranická propast", "Hranicka propast", "Hranická"],
+          "correctAnswer": "Hranická propast",
+          "hostNote": "Naměřená hloubka pod vodou přes 404 metrů, dno stále nebylo dosaženo!",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "r4-q6",
+          "type": "Ordering",
+          "text": "Seřaďte tato světová pohoří podle nadmořské výšky jejich nejvyššího vrcholu od NEJVYŠŠÍHO po NEJNIŽŠÍ:",
+          "options": ["Himálaj", "Andy", "Alpy", "Krkonoše"],
+          "correctOrder": ["Himálaj", "Andy", "Alpy", "Krkonoše"],
+          "correctAnswer": "Himálaj (8 848 m) → Andy (6 961 m) → Alpy (4 808 m) → Krkonoše (1 603 m)",
+          "hostNote": "Mount Everest, Aconcagua, Mont Blanc, Sněžka.",
+          "timeLimitSeconds": 35
+        },
+        {
+          "id": "r4-q7",
+          "type": "MultipleChoice",
+          "text": "Který savec je nejrychlejším suchozemským zvířetem planety?",
+          "options": ["Lev", "Gepard", "Vidloroh", "Puma"],
+          "correctAnswer": "Gepard",
+          "hostNote": "Krátkodobě dokáže vyvinout rychlost přes 100 km/h.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r4-q8",
+          "type": "TextInput",
+          "text": "Které dva státy mají společnou nejdelší pozemní hranici na světě?",
+          "acceptedAnswers": ["USA a Kanada", "Kanada a USA", "Spojené státy a Kanada", "Kanada a Spojené státy"],
+          "correctAnswer": "Kanada a USA (8 891 km)",
+          "hostNote": "Včetně hranice s Aljaškou.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "r4-q9",
+          "type": "MultipleChoice",
+          "text": "Které město v ČR proslulo výrobou perníku a dostihovým závodem Velká steeplechase?",
+          "options": ["Hradec Králové", "Pardubice", "Olomouc", "Jihlava"],
+          "correctAnswer": "Pardubice",
+          "hostNote": "Velká pardubická se běží už od roku 1874.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r4-q10",
+          "type": "TextInput",
+          "text": "Jak se nazývá největší ostrov na světě (nepočítáme-li kontinent Austrálii)?",
+          "acceptedAnswers": ["Grónsko", "Gronsko", "Greenland"],
+          "correctAnswer": "Grónsko",
+          "hostNote": "Rozloha 2,16 milionu km², autonomní součást Dánského království.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r4-q11",
+          "type": "MultipleChoice",
+          "text": "Kolik srdcí má chobotnice?",
+          "options": ["1", "2", "3", "4"],
+          "correctAnswer": "3",
+          "hostNote": "Dvě žaberní srdce pumpují krev do žaber a třetí systémové do zbytku těla.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r4-q12",
+          "type": "TextInput",
+          "text": "Který památník zapsaný v UNESCO je zobrazen na této minimalistické ilustraci (město v jižních Čechách)?",
+          "acceptedAnswers": ["Český Krumlov", "Cesky Krumlov", "Krumlov"],
+          "correctAnswer": "Český Krumlov (Zámecká věž)",
+          "hostNote": "Typický meandr Vltavy a renesanční zámecká věž.",
+          "timeLimitSeconds": 30,
+          "media": {
+            "type": "image",
+            "src": "media/krumlov-tower.svg",
+            "playbackMode": "duringQuestion",
+            "altText": "Stylizovaná věž zámku nad meandrem řeky v jižních Čechách."
+          }
+        }
+      ]
+    },
+    {
+      "roundNumber": 5,
+      "title": "Sport, věda a technologie",
+      "description": "12 otázek pro fanoušky sportu, přírodních věd a moderních technologií.",
+      "isFinal": false,
+      "pointMultiplier": 1.0,
+      "questions": [
+        {
+          "id": "r5-q1",
+          "type": "MultipleChoice",
+          "text": "V jakém roce vyhráli čeští hokejisté legendární olympijský turnaj v japonském Naganu?",
+          "options": ["1994", "1998", "2002", "2006"],
+          "correctAnswer": "1998",
+          "hostNote": "Finále Česko – Rusko 1:0, vítězný gól Petr Svoboda!",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r5-q2",
+          "type": "TextInput",
+          "text": "Jaké je chemické označení pro prvek draslík?",
+          "acceptedAnswers": ["K"],
+          "correctAnswer": "K (Kalium)",
+          "hostNote": "Latinsky Kalium, protonové číslo 19.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r5-q3",
+          "type": "MultipleChoice",
+          "text": "Co znamená zkratka HTTP ve webových adresách?",
+          "options": [
+            "HyperText Transfer Protocol",
+            "High Transmission Text Program",
+            "Host Terminal Transport Path",
+            "Hyperlink Technical Transfer Process"
+          ],
+          "correctAnswer": "HyperText Transfer Protocol",
+          "hostNote": "Základní aplikační protokol World Wide Webu (Tim Berners-Lee, 1989–1991).",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r5-q4",
+          "type": "TextInput",
+          "text": "Která česká tenistka vyhrála v roce 2023 Wimbledon a o rok později ji napodobila Barbora Krejčíková?",
+          "acceptedAnswers": ["Markéta Vondroušová", "Vondroušová", "Vondrousova"],
+          "correctAnswer": "Markéta Vondroušová",
+          "hostNote": "První nenasazená vítězka Wimbledonu v otevřené éře!",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r5-q5",
+          "type": "MultipleChoice",
+          "text": "Který plyn tvoří největší část (přibližně 78 %) zemské atmosféry?",
+          "options": ["Kyslík", "Dusík", "Oxid uhličitý", "Argon"],
+          "correctAnswer": "Dusík",
+          "hostNote": "Dusík ~78 %, kyslík ~21 %, argon ~0,93 %, CO2 ~0,04 %.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r5-q6",
+          "type": "Ordering",
+          "text": "Seřaďte tyto planety sluneční soustavy podle vzdálenosti od Slunce od NEJBLIŽŠÍ po NEJVZDÁLENĚJŠÍ:",
+          "options": ["Venuše", "Mars", "Jupiter", "Saturn"],
+          "correctOrder": ["Venuše", "Mars", "Jupiter", "Saturn"],
+          "correctAnswer": "Venuše → Mars → Jupiter → Saturn",
+          "hostNote": "Merkur, Venuše, Země, Mars, Jupiter, Saturn, Uran, Neptun.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "r5-q7",
+          "type": "TextInput",
+          "text": "Kolik metrů (přesně na celé metry) měří oficiální maratonský běh?",
+          "acceptedAnswers": ["42195", "42 195", "42195 m", "42 195 m"],
+          "correctAnswer": "42 195 metrů (42,195 km)",
+          "hostNote": "Vzdálenost stanovena na OH 1908 v Londýně (od hradu Windsor ke královské lóži).",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "r5-q8",
+          "type": "MultipleChoice",
+          "text": "Který český vědec je považován za zakladatele moderní genetiky díky pokusům s křížením hrachu v Brně?",
+          "options": ["Jan Evangelista Purkyně", "Gregor Johann Mendel", "Jaroslav Heyrovský", "Otto Wichterle"],
+          "correctAnswer": "Gregor Johann Mendel",
+          "hostNote": "Své zákony dědičnosti publikoval v roce 1866 v Brně.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r5-q9",
+          "type": "TextInput",
+          "text": "Jak se jmenuje operační systém s tučňákem Tuxem ve znaku, jehož jádro vytvořil Linus Torvalds?",
+          "acceptedAnswers": ["Linux"],
+          "correctAnswer": "Linux",
+          "hostNote": "První verze jádra byla oznámena v roce 1991.",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r5-q10",
+          "type": "MultipleChoice",
+          "text": "Který fotbalový klub vyhrál nejvíce titulů v Lize mistrů UEFA (včetně PMEZ)?",
+          "options": ["AC Milán", "Bayern Mnichov", "Real Madrid", "Liverpool"],
+          "correctAnswer": "Real Madrid",
+          "hostNote": "15 titulů (včetně vítězství 2024).",
+          "timeLimitSeconds": 20
+        },
+        {
+          "id": "r5-q11",
+          "type": "TextInput",
+          "text": "Jakou fyzikální jednotkou (příjmením vědce) se měří elektrický odpor?",
+          "acceptedAnswers": ["Ohm", "Óm", "Om"],
+          "correctAnswer": "Ohm (Ω)",
+          "hostNote": "Pojmenována po německém fyzikovi Georgu Simonu Ohmovi.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "r5-q12",
+          "type": "MultipleChoice",
+          "text": "Která část oka reguluje množství světla vstupujícího na sítnici?",
+          "options": ["Rohovka", "Duhovka (zornice)", "Sklivec", "Oční nerv"],
+          "correctAnswer": "Duhovka (zornice)",
+          "hostNote": "Svaly duhovky rozšiřují a zužují zornici jako clona fotoaparátu.",
+          "timeLimitSeconds": 25
+        }
+      ]
+    },
+    {
+      "roundNumber": 6,
+      "title": "Finálový rozstřel",
+      "description": "10 těžších finálových otázek za dvojnásobek bodů! Nezapomeňte si předem vybrat 2 otázky pro Žolíka!",
+      "isFinal": true,
+      "pointMultiplier": 2.0,
+      "questions": [
+        {
+          "id": "f-q1",
+          "type": "TextInput",
+          "text": "Ve kterém roce vzniklo samostatné Československo?",
+          "acceptedAnswers": ["1918"],
+          "correctAnswer": "1918 (28. října 1918)",
+          "hostNote": "Prvním prezidentem se stal Tomáš Garrigue Masaryk.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "f-q2",
+          "type": "MultipleChoice",
+          "text": "Který český nositel Nobelovy ceny ji získal v roce 1959 za objev polarografie?",
+          "options": ["Jaroslav Seifert", "Jaroslav Heyrovský", "Carl Ferdinand Cori", "Otto Wichterle"],
+          "correctAnswer": "Jaroslav Heyrovský",
+          "hostNote": "Nobelova cena za chemii 1959; Jaroslav Seifert ji získal za literaturu roku 1984.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "f-q3",
+          "type": "Ordering",
+          "text": "Seřaďte tyto české panovníky chronologicky od NEJSTARŠÍHO po NEJNOVĚJŠÍHO:",
+          "options": ["Přemysl Otakar II.", "Karel IV.", "Jiří z Poděbrad", "Rudolf II."],
+          "correctOrder": ["Přemysl Otakar II.", "Karel IV.", "Jiří z Poděbrad", "Rudolf II."],
+          "correctAnswer": "Přemysl Otakar II. (1253) → Karel IV. (1346) → Jiří z Poděbrad (1458) → Rudolf II. (1576)",
+          "hostNote": "Král železný a zlatý, Otec vlasti, Husitský král, Císař alchymistů.",
+          "timeLimitSeconds": 40
+        },
+        {
+          "id": "f-q4",
+          "type": "TextInput",
+          "text": "Jak se jmenuje nejmenší nezávislý stát světa podle rozlohy i počtu obyvatel?",
+          "acceptedAnswers": ["Vatikán", "Vatikan", "Vatican"],
+          "correctAnswer": "Vatikán (0,44 km²)",
+          "hostNote": "Enkláva uvnitř italského Říma.",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "f-q5",
+          "type": "MultipleChoice",
+          "text": "Který kov je při běžné pokojové teplotě (20 °C) v kapalném skupenství?",
+          "options": ["Gallium", "Rtuť", "Olovo", "Cín"],
+          "correctAnswer": "Rtuť",
+          "hostNote": "Teplota tání rtuti je -38,8 °C (gallium taje až při ~29,8 °C, v ruce).",
+          "timeLimitSeconds": 25
+        },
+        {
+          "id": "f-q6",
+          "type": "TextInput",
+          "text": "Který britský fyzik a autor knihy „Stručná historie času“ se proslavil výzkumem černých děr?",
+          "acceptedAnswers": ["Stephen Hawking", "Hawking"],
+          "correctAnswer": "Stephen Hawking",
+          "hostNote": "Hawkingovo záření, 1942–2018.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "f-q7",
+          "type": "MultipleChoice",
+          "text": "Kolik zlatých olympijských medailí vyhrál Emil Zátopek na jedněch hrách v Helsinkách v roce 1952?",
+          "options": ["2", "3", "4", "5"],
+          "correctAnswer": "3",
+          "hostNote": "Vyhrál 5 000 m, 10 000 m i maraton – kousek, který už nikdo nikdy nezopakoval!",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "f-q8",
+          "type": "Ordering",
+          "text": "Seřaďte tyto světové metropole podle zeměpisné šířky od NEJSEVERNĚJŠÍ po NEJJIŽNĚJŠÍ:",
+          "options": ["Reykjavík", "Praha", "Řím", "Káhira"],
+          "correctOrder": ["Reykjavík", "Praha", "Řím", "Káhira"],
+          "correctAnswer": "Reykjavík (64°N) → Praha (50°N) → Řím (42°N) → Káhira (30°N)",
+          "hostNote": "Jasný severojižní gradient přes Evropu do severní Afriky.",
+          "timeLimitSeconds": 35
+        },
+        {
+          "id": "f-q9",
+          "type": "TextInput",
+          "text": "Jak se nazývá největší měsíc planety Saturn, který má hustou atmosféru a jezera kapalného metanu?",
+          "acceptedAnswers": ["Titan"],
+          "correctAnswer": "Titan",
+          "hostNote": "V roce 2005 na něm přistála evropská sonda Huygens.",
+          "timeLimitSeconds": 30
+        },
+        {
+          "id": "f-q10",
+          "type": "MultipleChoice",
+          "text": "Která kniha je po Bibli celosvětově nejpřekládanějším beletristickým dílem (přes 500 jazyků a dialektů)?",
+          "options": ["Harry Potter a Kámen mudrců", "Malý princ", "Alenka v říši divů", "Don Quijote"],
+          "correctAnswer": "Malý princ",
+          "hostNote": "Antoine de Saint-Exupéry (1943). Závěrečná fanfára při odhalení!",
+          "timeLimitSeconds": 30,
+          "media": {
+            "type": "audio",
+            "src": "media/fanfare-reveal.wav",
+            "startSeconds": 0,
+            "endSeconds": 3,
+            "playbackMode": "onReveal",
+            "transcript": "Slavnostní finálová fanfára."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Stylizovaná věž zámku nad meandrem řeky">
+  <defs>
+    <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="65%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#dusk)"/>
+  <!-- River meander -->
+  <path d="M0 365 Q200 325 400 365 T800 355 L800 450 L0 450 Z" fill="#1d4ed8" opacity="0.75"/>
+  <!-- Cliff and castle silhouettes -->
+  <path d="M120 350 L185 260 L570 250 L650 355 Z" fill="#1e293b"/>
+  <!-- Iconic round Renaissance castle tower -->
+  <rect x="355" y="135" width="90" height="140" fill="#fde68a" stroke="#1e293b" stroke-width="4"/>
+  <!-- Arcade gallery -->
+  <rect x="345" y="122" width="110" height="22" rx="4" fill="#dc2626"/>
+  <path d="M352 122 Q400 72 448 122 Z" fill="#047857"/>
+  <!-- Lantern dome -->
+  <rect x="388" y="64" width="24" height="24" fill="#fde68a"/>
+  <polygon points="384,64 400,32 416,64" fill="#047857"/>
+  <!-- Town roofs -->
+  <polygon points="210,275 265,230 320,275" fill="#b91c1c"/>
+  <polygon points="480,270 535,225 590,270" fill="#b91c1c"/>
+</svg>
