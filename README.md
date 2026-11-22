@@ -7,7 +7,7 @@ Real-time webová aplikace pro pořádání živých hospodských kvízů (loká
 - **3 striktně oddělené SignalR pohledy (`/screen`, `/host`, `/play`):**
   - **`/screen` (Projektor / TV):** Prezentační plátno bez ovládacích prvků – QR kód v lobby (generovaný 100% offline), pravidla, intro kola, otázky s odpočtem, lokální audio/video/obrázky i YouTube výřezy (`startSeconds`–`endSeconds`), odhalení odpovědi, animovaný žebříček (Framer Motion), stupně vítězů se statistikami večera a horní banner zpráv od moderátora.
   - **`/host` (Moderátor / Admin):** Ovládací pult s načítáním balíčků a jazykových mutací kvízu, stavovým automatem hry, klávesovými zkratkami (`Space`/`→`, `P`, `E`, `L`, `M`, `?`), přehledem odpovědí v reálném čase se serverovým pořadím a latencí, 1-klik přepínačem `Správně` / `½ bodu` / `Špatně`, ruční korekcí bodů, pauzou s úpravou parametrů živé otázky a zprávami hráčům i na projektor.
-  - **`/play` (Hráčský klient pro mobily):** Připojení přes QR kód nebo 4znakový kód hry, úprava názvu a avatara týmu, perzistentní `teamToken` (JWT) v `localStorage` pro okamžité znovupřipojení po uspání telefonu, podpora `MultipleChoice`, `TextInput` (s automatickou tolerancí diakritiky a překlepů pomocí Levenshteinovy vzdálenosti) a `Ordering` (drag & drop i přístupná tlačítka Nahoru/Dolů), a oba režimy **Finálového žolíka** (`OnDemand` i `PreSelect`).
+  - **`/play` (Hráčský klient pro mobily):** Připojení přes QR kód nebo 6znakový kód hry, úprava názvu a avatara týmu, perzistentní `teamToken` (JWT) v `localStorage` pro okamžité znovupřipojení po uspání telefonu, podpora `MultipleChoice`, `TextInput` (s automatickou tolerancí diakritiky a překlepů pomocí Levenshteinovy vzdálenosti) a `Ordering` (drag & drop i přístupná tlačítka Nahoru/Dolů), a oba režimy **Finálového žolíka** (`OnDemand` i `PreSelect`).
 - **Zero-setup perzistence a odolnost:** Žádná externí databáze. Kvízy jsou v `./quizzes/<quiz-id>/`, aktivní hra se atomicky ukládá po každém přechodu stavu do `./state/active-session.json` (při pádu uprostřed otázky se obnoví v pozastaveném stavu se zachovaným zbývajícím časem).
 - **Bezpečnost a HTTPS:** Automatický lokální **HTTPS** (`https://<LAN-IP>:5443`) s přesměrováním z HTTP (`:5080`), generovaný X.509 certifikát (TLS 1.2/1.3) pro `localhost` i aktuální LAN IP, role-based JWT tokeny (`Host`, `Screen`, `Player`), rate limiting proti brute-force, bezpečnostní hlavičky (CSP, HSTS, Fetch Metadata, `X-Frame-Options`, `nosniff`, sandbox na média) a validace nahraných souborů. Správné odpovědi a poznámky moderátora se nikdy neposílají na `/screen` ani `/play` před stavem `QuestionReveal`.
 - **Přístupnost a vzhled:** WCAG 2.1 úroveň A+, světlý i tmavý režim s přepínačem respektující systémové preference (`light-dark()` + `<meta name="color-scheme">`), čeština jako výchozí jazyk s připraveným přepínačem `CZ`/`EN`.
@@ -34,8 +34,8 @@ Po spuštění server automaticky vygeneruje lokální TLS certifikát pro aktu�
   PubQuiz Engine spuštěn!
   Lokální / LAN adresa : https://192.168.128.71:5443
   Moderátor (/host)    : https://192.168.128.71:5443/host  | PIN: 482910
-  Projektor (/screen)  : https://192.168.128.71:5443/screen?code=K7M2
-  Hráči (/play)        : https://192.168.128.71:5443/play?join=P4X9
+  Projektor (/screen)  : https://192.168.128.71:5443/screen?code=K7M2Q8
+  Hráči (/play)        : https://192.168.128.71:5443/play?join=P4X9R3
   TLS / HTTPS          : aktivní (lokální LAN certifikát)
   Lokální CA certifikát: .../state/certs/pubquiz-ca.crt
 ============================================================

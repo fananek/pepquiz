@@ -217,9 +217,9 @@ export function PlayPage() {
       .finally(() => setJoining(false));
   }, [searchParams, setSearchParams]);
 
-  // Load offline/active teams when user switches to Rejoin tab and has a 4-char JoinCode
+  // Load offline/active teams when user switches to Rejoin tab and has a 6-char JoinCode
   useEffect(() => {
-    if (token || joinTab !== 'rejoin' || joinCode.trim().length < 4) {
+    if (token || joinTab !== 'rejoin' || joinCode.trim().length < 6) {
       return;
     }
     let active = true;
@@ -582,7 +582,7 @@ export function PlayPage() {
                       name="joinCode"
                       type="text"
                       required
-                      minLength={4}
+                      minLength={6}
                       maxLength={8}
                       autoCorrect="off"
                       autoCapitalize="characters"
@@ -590,7 +590,7 @@ export function PlayPage() {
                       enterKeyHint="next"
                       value={joinCode}
                       onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                      placeholder="ABCD"
+                      placeholder="A7B9K2"
                       className="uppercase font-mono tracking-widest text-center font-bold text-xl"
                     />
                   </div>
@@ -643,9 +643,9 @@ export function PlayPage() {
                 <form onSubmit={handleRejoinByCode} className="elevated-card p-4 space-y-3">
                   <div className="font-extrabold text-sm">1. Pomocí obnovovacího kódu týmu</div>
                   <p className="text-xs text-[var(--text-secondary)] m-0">
-                    Zadejte 4znakový obnovovací kód vašeho týmu (získáte jej od moderátora – přenese tým i na jiný mobil bez ztráty bodů).
+                    Zadejte obnovovací kód vašeho týmu (získáte jej od moderátora – přenese tým i na jiný mobil bez ztráty bodů).
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2.5">
                     <label htmlFor="recovery-code" className="visually-hidden">
                       Obnovovací kód týmu
                     </label>
@@ -658,12 +658,13 @@ export function PlayPage() {
                       autoCorrect="off"
                       autoCapitalize="characters"
                       spellCheck={false}
+                      enterKeyHint="go"
                       value={recoveryCodeInput}
                       onChange={(e) => setRecoveryCodeInput(e.target.value.toUpperCase())}
-                      placeholder="K7P2"
-                      className="flex-1 uppercase font-mono tracking-widest text-center font-bold text-lg"
+                      placeholder="K7P2M9"
+                      className="w-full sm:flex-1 min-w-0 uppercase font-mono tracking-widest text-center font-bold text-lg"
                     />
-                    <button type="submit" disabled={joining} className="btn-primary shrink-0">
+                    <button type="submit" disabled={joining} className="btn-primary w-full sm:w-auto shrink-0">
                       Obnovit
                     </button>
                   </div>
@@ -684,14 +685,14 @@ export function PlayPage() {
                       spellCheck={false}
                       value={joinCode}
                       onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                      placeholder="ABCD"
+                      placeholder="A7B9K2"
                       className="uppercase font-mono tracking-widest text-center font-bold"
                     />
                   </div>
 
                   {loadingTeams && <p className="text-xs text-[var(--text-muted)] m-0">Načítám seznam týmů…</p>}
 
-                  {!loadingTeams && joinCode.trim().length >= 4 && rejoinTeams.length === 0 && (
+                  {!loadingTeams && joinCode.trim().length >= 6 && rejoinTeams.length === 0 && (
                     <p className="text-xs text-[var(--text-muted)] m-0">
                       Pro tento kód hry zatím nebyly nalezeny žádné týmy.
                     </p>
@@ -924,14 +925,110 @@ export function PlayPage() {
 
         {/* 2. QUIZ INTRO */}
         {gameState.state === 'QuizIntro' && (
-          <section className="surface-card p-6 space-y-4">
-            <h1 className="text-2xl font-black m-0">{gameState.quizTitle}</h1>
-            <p className="text-sm text-[var(--text-secondary)] m-0">{t.play.waitingIntro}</p>
-            <ol className="space-y-2 text-sm pl-5 m-0">
-              {gameState.quizRules.map((r, i) => (
-                <li key={i}>{r}</li>
-              ))}
-            </ol>
+          <section className="space-y-4">
+            <div className="surface-card p-5 sm:p-6 space-y-4">
+              <div className="space-y-1">
+                <h1 className="text-2xl font-black m-0">{gameState.quizTitle}</h1>
+                {gameState.quizDescription && (
+                  <p className="text-sm text-[var(--text-secondary)] m-0 leading-snug">
+                    {gameState.quizDescription}
+                  </p>
+                )}
+              </div>
+
+              <div className="elevated-card p-4 space-y-2.5">
+                <h2 className="text-sm font-extrabold uppercase tracking-wide text-[var(--accent)] m-0">
+                  {t.screen.rulesHeading}
+                </h2>
+                <ol className="space-y-2 text-sm font-medium pl-5 m-0">
+                  {gameState.quizRules.map((r, i) => (
+                    <li key={i} className="leading-snug">
+                      {r}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              {gameState.bonusTasks.length > 0 && (
+                <div className="elevated-card p-4 space-y-3 border border-[var(--accent)]/50">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-sm font-extrabold uppercase tracking-wide text-[var(--accent)] m-0 flex items-center gap-1.5">
+                      <Gift className="w-4 h-4 shrink-0" aria-hidden="true" />
+                      <span>{t.screen.bonusTasksHeading}</span>
+                    </h2>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTaskFeedback(null);
+                        setTasksModalOpen(true);
+                      }}
+                      className="btn-secondary !py-1 !px-2.5 !min-h-[32px] text-xs"
+                    >
+                      {t.play.bonusTasksBtn} →
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {gameState.bonusTasks.map((bt) => (
+                      <div
+                        key={bt.id}
+                        className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1"
+                      >
+                        <div className="flex items-start justify-between gap-2 text-sm">
+                          <span className="font-extrabold leading-snug">{bt.title}</span>
+                          <span className="shrink-0 px-2 py-0.5 rounded-full text-xs font-black bg-[var(--accent)] text-[var(--accent-text)] tabular-nums">
+                            +{bt.points} b.
+                          </span>
+                        </div>
+                        {bt.description && (
+                          <p className="text-xs text-[var(--text-secondary)] m-0 leading-snug">
+                            {bt.description}
+                          </p>
+                        )}
+                        <div className="text-[11px] font-bold text-[var(--text-muted)]">
+                          Max. {bt.maxCompletionsPerTeam}× za hru na tým
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {gameState.rounds.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2 text-xs font-extrabold uppercase text-[var(--text-muted)]">
+                    <span>{t.screen.roundsOverviewHeading}</span>
+                    <span className="tabular-nums">
+                      {gameState.rounds.length} kol •{' '}
+                      {gameState.rounds.reduce((sum, r) => sum + r.questionCount, 0)} {t.screen.questionsCount}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {gameState.rounds.map((r) => (
+                      <div
+                        key={r.roundNumber}
+                        className={`px-3.5 py-2.5 rounded-xl border flex items-center justify-between gap-2 text-sm ${
+                          r.isFinal
+                            ? 'bg-[var(--accent-soft)]/50 border-[var(--accent)]'
+                            : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)]'
+                        }`}
+                      >
+                        <span className="font-bold truncate">
+                          {r.isFinal ? '★ ' : `${r.roundNumber}. `}
+                          {r.title}
+                        </span>
+                        <span className="text-xs font-extrabold text-[var(--text-secondary)] shrink-0 tabular-nums">
+                          {r.questionCount} ot. • {r.pointMultiplier}×
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <p className="text-xs text-center text-[var(--text-muted)] m-0 pt-1">
+                {t.play.waitingIntro}
+              </p>
+            </div>
           </section>
         )}
 

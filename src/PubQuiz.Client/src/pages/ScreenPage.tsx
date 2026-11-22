@@ -187,14 +187,14 @@ export function ScreenPage() {
                 name="code"
                 type="text"
                 required
-                minLength={4}
+                minLength={6}
                 maxLength={8}
                 autoCorrect="off"
                 autoCapitalize="characters"
                 spellCheck={false}
                 value={pairCode}
                 onChange={(e) => setPairCode(e.target.value.toUpperCase())}
-                placeholder="ABCD"
+                placeholder="A7B9K2"
                 className="uppercase tracking-widest font-mono text-center text-2xl font-bold"
               />
             </div>
@@ -429,6 +429,40 @@ export function ScreenPage() {
                         <div className="text-xs font-extrabold uppercase text-[var(--text-muted)] pt-1">
                           Max. {task.maxCompletionsPerTeam}× za hru na tým • hlásí vedoucí týmu moderátorovi
                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {gameState.rounds.length > 0 && (
+                <div className="surface-card p-6 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-xl font-extrabold text-[var(--accent)] m-0">
+                      {t.screen.roundsOverviewHeading}
+                    </h2>
+                    <span className="text-sm font-bold text-[var(--text-muted)] tabular-nums">
+                      {gameState.rounds.length} kol •{' '}
+                      {gameState.rounds.reduce((sum, r) => sum + r.questionCount, 0)} {t.screen.questionsCount}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {gameState.rounds.map((r) => (
+                      <div
+                        key={r.roundNumber}
+                        className={`px-4 py-2.5 rounded-xl border flex items-center justify-between gap-2 text-base ${
+                          r.isFinal
+                            ? 'bg-[var(--accent-soft)]/50 border-[var(--accent)]'
+                            : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)]'
+                        }`}
+                      >
+                        <span className="font-bold truncate">
+                          {r.isFinal ? '★ ' : `${r.roundNumber}. `}
+                          {r.title}
+                        </span>
+                        <span className="text-xs font-extrabold text-[var(--text-secondary)] shrink-0 tabular-nums">
+                          {r.questionCount} ot. • {r.pointMultiplier}×
+                        </span>
                       </div>
                     ))}
                   </div>

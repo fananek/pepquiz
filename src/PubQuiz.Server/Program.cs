@@ -166,7 +166,7 @@ builder.Services.AddRateLimiter(opts =>
     static string GetClientIp(HttpContext ctx) =>
         ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
-    // Strict limiter for Host PIN & Screen Pairing Code (prevents brute-forcing 6-digit PIN / 4-char code)
+    // Strict limiter for Host PIN & Screen Pairing Code (prevents brute-forcing 6-digit PIN / 6-char code)
     opts.AddPolicy("auth-strict", ctx => RateLimitPartition.GetSlidingWindowLimiter(
         $"strict:{GetClientIp(ctx)}",
         _ => new SlidingWindowRateLimiterOptions

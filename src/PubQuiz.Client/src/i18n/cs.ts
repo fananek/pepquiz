@@ -56,7 +56,7 @@ export const cs = {
     hostPinLabel: 'PIN moderátora',
     hostSubmit: 'Přihlásit se',
     screenTitle: 'Párování projektoru (/screen)',
-    screenHint: 'Zadejte 4znakový párovací kód z obrazovky moderátora, nebo použijte párovací odkaz.',
+    screenHint: 'Zadejte 6znakový párovací kód z obrazovky moderátora, nebo použijte párovací odkaz.',
     screenCodeLabel: 'Párovací kód obrazovky',
     screenSubmit: 'Spárovat projektor',
     logout: 'Odhlásit'
@@ -69,6 +69,7 @@ export const cs = {
     waitingForTeams: 'Čekáme na připojení prvních týmů…',
     rulesHeading: 'Pravidla dnešního kvízu',
     bonusTasksHeading: 'Bonusové úkoly večera',
+    roundsOverviewHeading: 'Přehled hry',
     roundPrefix: 'Kolo',
     finalRoundBadge: 'FINÁLOVÉ KOLO',
     questionsCount: 'otázek',
@@ -194,7 +195,7 @@ export const cs = {
   },
   play: {
     joinTitle: 'Připojit tým do kvízu',
-    joinCodeLabel: 'Kód hry (4 znaky)',
+    joinCodeLabel: 'Kód hry (6 znaků)',
     teamNameLabel: 'Název týmu',
     teamNameHint: '2 až 32 znaků, unikátní v rámci kvízu.',
     teamNamePlaceholder: 'Např. Pivní filosofové',

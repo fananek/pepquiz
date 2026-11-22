@@ -544,6 +544,8 @@ public sealed class GameEngineIntegrationTests : IDisposable
         Assert.True(joinOk);
         Assert.Equal("#b45309", team!.AvatarColor);
         Assert.Equal("v2:owl:none:none:happy:solid", team.AvatarId);
+        Assert.Equal(6, engine.JoinCode.Length);
+        Assert.Equal(6, engine.ScreenCode.Length);
         Assert.True(team.RecoveryCode.Length >= 6);
 
         await engine.StartQuestionAsync(0, 1, autoStartOverride: true);

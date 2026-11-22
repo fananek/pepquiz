@@ -61,6 +61,10 @@ public sealed class GameEngineService : IDisposable
         if (restored is not null && !string.IsNullOrWhiteSpace(restored.JoinCode))
         {
             _session = restored;
+            if (_session.JoinCode.Trim().Length < 6)
+                _session.JoinCode = GenerateCode(6);
+            if (string.IsNullOrWhiteSpace(_session.ScreenCode) || _session.ScreenCode.Trim().Length < 6)
+                _session.ScreenCode = GenerateCode(6);
             foreach (var team in _session.Teams.Values)
             {
                 team.IsConnected = false;
@@ -293,7 +297,7 @@ public sealed class GameEngineService : IDisposable
                 return (false, null, "Vybraný tým nebyl v aktuální hře nalezen.");
 
             if (matched.IsConnected)
-                return (false, null, "Tento tým je stále připojen na jiném zařízení. Zadejte 4znakový obnovovací kód týmu od moderátora.");
+                return (false, null, "Tento tým je stále připojen na jiném zařízení. Zadejte 6znakový obnovovací kód týmu od moderátora.");
 
             matched.LastSeenUtc = DateTimeOffset.UtcNow;
             _persistence.SaveSessionAtomic(_session);
@@ -580,8 +584,8 @@ public sealed class GameEngineService : IDisposable
             var quizId = _session.QuizId;
             var quizLang = _session.QuizLanguage;
             var autoStart = _session.AutoStartTimer;
-            var joinCode = resetCodes ? GenerateCode(4) : _session.JoinCode;
-            var screenCode = resetCodes ? GenerateCode(4) : _session.ScreenCode;
+            var joinCode = resetCodes ? GenerateCode(6) : _session.JoinCode;
+            var screenCode = resetCodes ? GenerateCode(6) : _session.ScreenCode;
 
             _session = CreateFreshSession(joinCode, screenCode);
             _session.QuizId = quizId;
@@ -2514,8 +2518,8 @@ public sealed class GameEngineService : IDisposable
     private static ActiveSessionData CreateFreshSession(string? joinCode = null, string? screenCode = null) => new()
     {
         SessionId = Guid.NewGuid().ToString("N")[..10],
-        JoinCode = joinCode ?? GenerateCode(4),
-        ScreenCode = screenCode ?? GenerateCode(4),
+        JoinCode = joinCode ?? GenerateCode(6),
+        ScreenCode = screenCode ?? GenerateCode(6),
         State = GameState.Lobby,
         AutoStartTimer = false,
         UpdatedAtUtc = DateTimeOffset.UtcNow

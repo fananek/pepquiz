@@ -58,7 +58,7 @@ export const en: TranslationDict = {
     hostPinLabel: 'Host PIN',
     hostSubmit: 'Sign In',
     screenTitle: 'Pair Projector Screen (/screen)',
-    screenHint: 'Enter the 4-character pairing code from the host console or open the pairing link.',
+    screenHint: 'Enter the 6-character pairing code from the host console or open the pairing link.',
     screenCodeLabel: 'Screen pairing code',
     screenSubmit: 'Pair Screen',
     logout: 'Sign Out'
@@ -71,6 +71,7 @@ export const en: TranslationDict = {
     waitingForTeams: 'Waiting for the first teams to join…',
     rulesHeading: 'Tonight’s Quiz Rules',
     bonusTasksHeading: 'Bonus Pub Challenges',
+    roundsOverviewHeading: 'Game Overview',
     roundPrefix: 'Round',
     finalRoundBadge: 'FINAL ROUND',
     questionsCount: 'questions',
@@ -196,7 +197,7 @@ export const en: TranslationDict = {
   },
   play: {
     joinTitle: 'Join Quiz as Team',
-    joinCodeLabel: 'Game Code (4 chars)',
+    joinCodeLabel: 'Game Code (6 chars)',
     teamNameLabel: 'Team Name',
     teamNameHint: '2 to 32 characters, unique in this session.',
     teamNamePlaceholder: 'e.g. Quiz Wizards',

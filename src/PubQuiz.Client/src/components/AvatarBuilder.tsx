@@ -1,8 +1,10 @@
 import React, { useId, useRef, useState } from 'react';
-import { Shuffle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { RotateCcw, Shuffle } from 'lucide-react';
 import {
   AVATAR_CHARACTERS,
   AVATAR_COLORS,
+  AVATAR_COLOR_NAMES,
   AVATAR_EXPRESSIONS,
   AVATAR_GLASSES,
   AVATAR_HATS,
@@ -46,6 +48,10 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
     onChange(r.avatarId, r.avatarColor);
   };
 
+  const handleClearAccessories = () => {
+    updateCfg({ hat: 'none', glasses: 'none', expression: 'happy' });
+  };
+
   const handleTabKeyDown = (e: React.KeyboardEvent, idx: number) => {
     let nextIdx: number | null = null;
     if (e.key === 'ArrowRight') nextIdx = (idx + 1) % TABS.length;
@@ -63,30 +69,69 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
     }
   };
 
+  const characterLabel = AVATAR_CHARACTERS.find((c) => c.id === cfg.character)?.label ?? 'Avatar';
+  const hatLabel = cfg.hat !== 'none' ? AVATAR_HATS.find((h) => h.id === cfg.hat)?.label : null;
+  const glassesLabel = cfg.glasses !== 'none' ? AVATAR_GLASSES.find((g) => g.id === cfg.glasses)?.label : null;
+  const expressionLabel = AVATAR_EXPRESSIONS.find((ex) => ex.id === cfg.expression)?.label ?? null;
+
   return (
     <div className="space-y-3">
-      {/* Large Live Preview + Randomize */}
-      <div className="elevated-card p-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <TeamAvatar avatarId={avatarId} avatarColor={avatarColor} size="xl" />
-          <div className="text-sm space-y-1">
-            <div className="font-extrabold text-base">
-              {AVATAR_CHARACTERS.find((c) => c.id === cfg.character)?.label ?? 'Avatar'}
-            </div>
-            <div className="text-xs text-[var(--text-secondary)]">
-              Naklikejte si postavu, pokrývku, brýle i výraz!
+      {/* Studio Hero Live Preview */}
+      <div className="elevated-card p-4 flex flex-wrap sm:flex-nowrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
+          <motion.div
+            key={`${avatarId}:${avatarColor}`}
+            initial={{ scale: 0.9, rotate: -3 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+            className="shrink-0"
+          >
+            <TeamAvatar avatarId={avatarId} avatarColor={avatarColor} size="xl" />
+          </motion.div>
+          <div className="text-sm space-y-1.5 min-w-0">
+            <div className="font-black text-lg leading-tight truncate">{characterLabel}</div>
+            <div className="flex flex-wrap gap-1">
+              {hatLabel && (
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                  {hatLabel}
+                </span>
+              )}
+              {glassesLabel && (
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                  {glassesLabel}
+                </span>
+              )}
+              {expressionLabel && (
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                  {expressionLabel}
+                </span>
+              )}
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={handleRandomize}
-          className="btn-secondary !px-3 !py-2 text-xs shrink-0"
-          aria-label="Vygenerovat náhodného avatara"
-        >
-          <Shuffle className="w-4 h-4" aria-hidden="true" />
-          <span>Náhodný</span>
-        </button>
+
+        <div className="flex sm:flex-col gap-1.5 shrink-0 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={handleRandomize}
+            className="btn-primary !px-3 !py-1.5 !min-h-[38px] text-xs flex-1 sm:flex-initial whitespace-nowrap"
+            aria-label="Vygenerovat náhodného avatara"
+          >
+            <Shuffle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            <span>Náhodný</span>
+          </button>
+          {(cfg.hat !== 'none' || cfg.glasses !== 'none' || cfg.expression !== 'happy') && (
+            <button
+              type="button"
+              onClick={handleClearAccessories}
+              className="btn-secondary !px-3 !py-1.5 !min-h-[36px] text-xs flex-1 sm:flex-initial whitespace-nowrap"
+              aria-label="Odebrat pokrývku a brýle"
+            >
+              <RotateCcw className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <span>Bez doplňků</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Single-row horizontally scrollable accessible tablist */}
@@ -116,13 +161,13 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
         })}
       </div>
 
-      {/* Tab Panels */}
+      {/* Tab Panel: Characters */}
       <div
         role="tabpanel"
         aria-labelledby={`${baseId}-tab-character`}
         hidden={activeTab !== 'character'}
       >
-        <div className="grid grid-cols-4 gap-2 pt-1 max-h-56 overflow-y-auto pr-0.5">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-60 overflow-y-auto pr-0.5">
           {AVATAR_CHARACTERS.map((ch) => {
             const active = cfg.character === ch.id;
             return (
@@ -131,10 +176,10 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
                 type="button"
                 aria-pressed={active}
                 onClick={() => updateCfg({ character: ch.id })}
-                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1 cursor-pointer transition-all ${
+                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1.5 cursor-pointer transition-all ${
                   active
-                    ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]'
+                    ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/60'
                 }`}
               >
                 <TeamAvatar
@@ -149,12 +194,13 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
         </div>
       </div>
 
+      {/* Tab Panel: Hats */}
       <div
         role="tabpanel"
         aria-labelledby={`${baseId}-tab-hat`}
         hidden={activeTab !== 'hat'}
       >
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 pt-1">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-60 overflow-y-auto pr-0.5">
           {AVATAR_HATS.map((h) => {
             const active = cfg.hat === h.id;
             return (
@@ -163,16 +209,16 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
                 type="button"
                 aria-pressed={active}
                 onClick={() => updateCfg({ hat: h.id })}
-                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1 cursor-pointer ${
+                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1.5 cursor-pointer transition-all ${
                   active
-                    ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]'
+                    ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/60'
                 }`}
               >
                 <TeamAvatar
                   avatarId={serializeAvatarConfig({ ...cfg, hat: h.id })}
                   avatarColor={avatarColor}
-                  size="sm"
+                  size="md"
                 />
                 <span className="text-[11px] font-bold truncate max-w-full">{h.label}</span>
               </button>
@@ -181,12 +227,13 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
         </div>
       </div>
 
+      {/* Tab Panel: Glasses */}
       <div
         role="tabpanel"
         aria-labelledby={`${baseId}-tab-glasses`}
         hidden={activeTab !== 'glasses'}
       >
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-60 overflow-y-auto pr-0.5">
           {AVATAR_GLASSES.map((g) => {
             const active = cfg.glasses === g.id;
             return (
@@ -195,16 +242,16 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
                 type="button"
                 aria-pressed={active}
                 onClick={() => updateCfg({ glasses: g.id })}
-                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1 cursor-pointer ${
+                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1.5 cursor-pointer transition-all ${
                   active
-                    ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]'
+                    ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/60'
                 }`}
               >
                 <TeamAvatar
                   avatarId={serializeAvatarConfig({ ...cfg, glasses: g.id })}
                   avatarColor={avatarColor}
-                  size="sm"
+                  size="md"
                 />
                 <span className="text-[11px] font-bold truncate max-w-full">{g.label}</span>
               </button>
@@ -213,12 +260,13 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
         </div>
       </div>
 
+      {/* Tab Panel: Expressions */}
       <div
         role="tabpanel"
         aria-labelledby={`${baseId}-tab-expression`}
         hidden={activeTab !== 'expression'}
       >
-        <div className="grid grid-cols-3 gap-2 pt-1">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-60 overflow-y-auto pr-0.5">
           {AVATAR_EXPRESSIONS.map((ex) => {
             const active = cfg.expression === ex.id;
             return (
@@ -227,16 +275,16 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
                 type="button"
                 aria-pressed={active}
                 onClick={() => updateCfg({ expression: ex.id })}
-                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1 cursor-pointer ${
+                className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1.5 cursor-pointer transition-all ${
                   active
-                    ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]'
+                    ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-sm'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/60'
                 }`}
               >
                 <TeamAvatar
                   avatarId={serializeAvatarConfig({ ...cfg, expression: ex.id })}
                   avatarColor={avatarColor}
-                  size="sm"
+                  size="md"
                 />
                 <span className="text-[11px] font-bold truncate max-w-full">{ex.label}</span>
               </button>
@@ -245,6 +293,7 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
         </div>
       </div>
 
+      {/* Tab Panel: Background & Pattern */}
       <div
         role="tabpanel"
         aria-labelledby={`${baseId}-tab-background`}
@@ -252,21 +301,28 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
       >
         <div className="space-y-3 pt-1">
           <div className="flex flex-wrap gap-2">
-            {AVATAR_COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => updateCfg({}, c)}
-                aria-label={`Barva pozadí ${c}`}
-                aria-pressed={avatarColor === c}
-                className={`w-9 h-9 rounded-full cursor-pointer border-3 ${
-                  avatarColor === c ? 'border-[var(--text-primary)] scale-110' : 'border-transparent'
-                }`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
+            {AVATAR_COLORS.map((c) => {
+              const selected = avatarColor.toLowerCase() === c.toLowerCase();
+              const label = AVATAR_COLOR_NAMES[c] ?? c;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => updateCfg({}, c)}
+                  aria-label={`Barva pozadí: ${label}`}
+                  title={label}
+                  aria-pressed={selected}
+                  className={`w-9 h-9 rounded-full cursor-pointer border-3 transition-transform ${
+                    selected ? 'border-[var(--text-primary)] scale-110 shadow-md' : 'border-transparent hover:scale-105'
+                  }`}
+                  style={{
+                    background: `radial-gradient(circle at 32% 28%, rgba(255,255,255,0.35), transparent 55%), ${c}`
+                  }}
+                />
+              );
+            })}
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {AVATAR_PATTERNS.map((p) => {
               const active = cfg.pattern === p.id;
               return (
@@ -275,13 +331,18 @@ export function AvatarBuilder({ avatarId, avatarColor, onChange }: AvatarBuilder
                   type="button"
                   aria-pressed={active}
                   onClick={() => updateCfg({ pattern: p.id })}
-                  className={`py-2 px-2 rounded-xl border-2 text-xs font-bold cursor-pointer ${
+                  className={`p-2 rounded-xl border-2 flex items-center gap-2 text-xs font-bold cursor-pointer transition-all ${
                     active
                       ? 'border-[var(--accent)] bg-[var(--accent-soft)]'
-                      : 'border-[var(--border-subtle)] bg-[var(--bg-surface)]'
+                      : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/60'
                   }`}
                 >
-                  {p.label}
+                  <TeamAvatar
+                    avatarId={serializeAvatarConfig({ ...cfg, pattern: p.id })}
+                    avatarColor={avatarColor}
+                    size="sm"
+                  />
+                  <span className="truncate">{p.label}</span>
                 </button>
               );
             })}
