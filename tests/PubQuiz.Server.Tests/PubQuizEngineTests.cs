@@ -646,6 +646,78 @@ public sealed class GameEngineIntegrationTests : IDisposable
         Assert.Equal(2, reloaded.Self.TaskClaims.Count(c => c.Status == BonusTaskClaimStatus.Approved));
     }
 
+    [Fact]
+    public void ScreenAuth_RequiresHostPinOrSingleUseLaunchToken()
+    {
+        var (_, tokens) = CreateEngine();
+
+        // Host PIN authenticates screen; wrong PIN rejected
+        Assert.True(tokens.VerifyHostPin("123456"));
+        Assert.False(tokens.VerifyHostPin("000000"));
+
+        // Single-use launch token minted by host works strictly once and cannot be replayed
+        var (launchToken, expires) = tokens.CreateScreenLaunchToken(TimeSpan.FromMinutes(5));
+        Assert.False(string.IsNullOrWhiteSpace(launchToken));
+        Assert.True(expires > DateTimeOffset.UtcNow);
+        Assert.True(tokens.ConsumeScreenLaunchToken(launchToken));
+        Assert.False(tokens.ConsumeScreenLaunchToken(launchToken)); // replay blocked!
+
+        // Expired launch token is rejected
+        var (expiredToken, _) = tokens.CreateScreenLaunchToken(TimeSpan.FromMilliseconds(-1));
+        Assert.False(tokens.ConsumeScreenLaunchToken(expiredToken));
+    }
+
+    [Fact]
+    public async Task JoinCode_RotatesOnLoadQuizAndResetSession_AndPreservesOnLanguageSwitch()
+    {
+        string codeAfterReset;
+        {
+            var (engine, _) = CreateEngine();
+            using var _d = engine;
+            var initialCode = engine.JoinCode;
+            Assert.Equal(6, initialCode.Length);
+
+            // 1. Loading a quiz rotates JoinCode immediately and invalidates the old code
+            Assert.True((await engine.LoadQuizAsync("test-quiz")).Success);
+            var codeAfterLoad = engine.JoinCode;
+            Assert.Equal(6, codeAfterLoad.Length);
+            Assert.NotEqual(initialCode, codeAfterLoad);
+
+            var (oldJoinOk, _, _) = await engine.JoinOrReconnectTeamAsync(initialCode, "Starý kód", "owl", "#b45309", null);
+            Assert.False(oldJoinOk);
+
+            var (newJoinOk, team, _) = await engine.JoinOrReconnectTeamAsync(codeAfterLoad, "Nový tým", "owl", "#b45309", null);
+            Assert.True(newJoinOk);
+            Assert.NotNull(team);
+
+            var snapAfterLoad = await engine.BuildSnapshotAsync(QuizRoles.Screen);
+            Assert.Equal(codeAfterLoad, snapAfterLoad.JoinCode);
+            Assert.EndsWith($"/play?join={codeAfterLoad}", snapAfterLoad.JoinUrl);
+
+            // 2. Switching language of the running quiz does NOT rotate JoinCode
+            Assert.True((await engine.SetQuizLanguageAsync("cs")).Success);
+            Assert.Equal(codeAfterLoad, engine.JoinCode);
+
+            // 3. Resetting the session (default) rotates JoinCode again, clears teams, and invalidates previous code
+            Assert.True((await engine.ResetSessionAsync()).Success);
+            codeAfterReset = engine.JoinCode;
+            Assert.Equal(6, codeAfterReset.Length);
+            Assert.NotEqual(codeAfterLoad, codeAfterReset);
+
+            var (staleJoinOk, _, _) = await engine.JoinOrReconnectTeamAsync(codeAfterLoad, "Po resetu starý", "fox", "#1d4ed8", null);
+            Assert.False(staleJoinOk);
+
+            var (freshJoinOk, _, _) = await engine.JoinOrReconnectTeamAsync(codeAfterReset, "Po resetu nový", "fox", "#1d4ed8", null);
+            Assert.True(freshJoinOk);
+            Assert.False(await engine.TeamExistsAsync(team!.Id));
+        }
+
+        // 4. New JoinCode persists across server restart
+        var (engine2, _) = CreateEngine();
+        using var _d2 = engine2;
+        Assert.Equal(codeAfterReset, engine2.JoinCode);
+    }
+
     private static Microsoft.AspNetCore.Http.IFormFile CreateFormFile(string fileName, string content)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(content);

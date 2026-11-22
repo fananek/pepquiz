@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -20,6 +21,7 @@ public sealed class JwtTokenService
     private readonly PubQuizOptions _options;
     private readonly SymmetricSecurityKey _signingKey;
     private readonly SigningCredentials _signingCredentials;
+    private readonly ConcurrentDictionary<string, DateTimeOffset> _screenLaunchTokens = new(StringComparer.Ordinal);
     public string HostPin { get; }
 
     public JwtTokenService(IOptions<PubQuizOptions> options, IHostEnvironment env)
@@ -118,6 +120,46 @@ public sealed class JwtTokenService
         return CryptographicOperations.FixedTimeEquals(
             SHA256.HashData(expected),
             SHA256.HashData(actual));
+    }
+
+    /// <summary>
+    /// Creates a cryptographically random, single-use, short-lived launch token so an authenticated Host
+    /// can open /screen on another computer/TV without typing or exposing the Host PIN in a URL.
+    /// </summary>
+    public (string LaunchToken, DateTimeOffset ExpiresAtUtc) CreateScreenLaunchToken(TimeSpan? ttl = null)
+    {
+        var now = DateTimeOffset.UtcNow;
+        foreach (var kv in _screenLaunchTokens)
+        {
+            if (kv.Value <= now)
+                _screenLaunchTokens.TryRemove(kv.Key, out _);
+        }
+
+        // Cap active launch tokens defensively
+        if (_screenLaunchTokens.Count >= 32)
+        {
+            var oldest = _screenLaunchTokens.OrderBy(kv => kv.Value).FirstOrDefault();
+            if (!string.IsNullOrEmpty(oldest.Key))
+                _screenLaunchTokens.TryRemove(oldest.Key, out _);
+        }
+
+        var token = Base64UrlEncoder.Encode(RandomNumberGenerator.GetBytes(24));
+        var expires = now.Add(ttl ?? TimeSpan.FromMinutes(5));
+        _screenLaunchTokens[token] = expires;
+        return (token, expires);
+    }
+
+    /// <summary>
+    /// Atomically consumes a one-time screen launch token. Returns true only once before expiration.
+    /// </summary>
+    public bool ConsumeScreenLaunchToken(string? launchToken)
+    {
+        if (string.IsNullOrWhiteSpace(launchToken))
+            return false;
+
+        var trimmed = launchToken.Trim();
+        return _screenLaunchTokens.TryRemove(trimmed, out var expiresAtUtc)
+            && expiresAtUtc > DateTimeOffset.UtcNow;
     }
 
     private static RuntimeSecrets LoadOrCreateSecrets(string secretsFile)

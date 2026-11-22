@@ -29,6 +29,7 @@ import { LeaderboardView } from '../components/LeaderboardView';
 import { ThemeToggle } from '../components/ThemeToggle';
 
 const SCREEN_TOKEN_KEY = 'pubquiz-screen-token';
+const HOST_TOKEN_KEY = 'pubquiz-host-token';
 const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 export function ScreenPage() {
@@ -41,7 +42,7 @@ export function ScreenPage() {
       return null;
     }
   });
-  const [pairCode, setPairCode] = useState(() => searchParams.get('code') ?? '');
+  const [screenPin, setScreenPin] = useState('');
   const [pairError, setPairError] = useState<string | null>(null);
   const [pairing, setPairing] = useState(false);
 
@@ -58,14 +59,18 @@ export function ScreenPage() {
       : 'Projektor (/screen) | PubQuiz Engine';
   }, [gameState?.quizTitle]);
 
-  // Auto-pair when opened via tokenized pairing URL /screen?code=XXXX
+  // Passwordless opening when launched from /host:
+  // 1) One-time ?launch=<token> link (works on another computer / TV), OR
+  // 2) Active Host JWT in the same browser (localStorage).
   useEffect(() => {
-    const urlCode = searchParams.get('code');
-    if (urlCode && !autoPairedRef.current) {
+    if (autoPairedRef.current) return;
+
+    const launchToken = searchParams.get('launch');
+    if (launchToken) {
       autoPairedRef.current = true;
       setPairing(true);
       api
-        .pairScreen(urlCode)
+        .pairScreen({ launchToken })
         .then((res) => {
           setToken(res.token);
           try {
@@ -75,11 +80,38 @@ export function ScreenPage() {
           setPairError(null);
         })
         .catch((err) => {
-          setPairError(err instanceof Error ? err.message : 'Párování selhalo.');
+          setSearchParams({}, { replace: true });
+          setPairError(err instanceof Error ? err.message : 'Jednorázový odkaz vypršel nebo byl již použit. Zadejte PIN moderátora.');
+        })
+        .finally(() => setPairing(false));
+      return;
+    }
+
+    if (token) return;
+
+    let hostToken: string | null = null;
+    try {
+      hostToken = localStorage.getItem(HOST_TOKEN_KEY);
+    } catch {}
+
+    if (hostToken) {
+      autoPairedRef.current = true;
+      setPairing(true);
+      api
+        .issueScreenTokenFromHost(hostToken)
+        .then((res) => {
+          setToken(res.token);
+          try {
+            localStorage.setItem(SCREEN_TOKEN_KEY, res.token);
+          } catch {}
+          setPairError(null);
+        })
+        .catch(() => {
+          // Host token expired or invalid — fall back cleanly to PIN prompt
         })
         .finally(() => setPairing(false));
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, token]);
 
   // Connect SignalR once paired
   useEffect(() => {
@@ -128,13 +160,14 @@ export function ScreenPage() {
     setPairError(null);
     setPairing(true);
     try {
-      const res = await api.pairScreen(pairCode.trim().toUpperCase());
+      const res = await api.pairScreen({ pin: screenPin.trim() });
       setToken(res.token);
+      setScreenPin('');
       try {
         localStorage.setItem(SCREEN_TOKEN_KEY, res.token);
       } catch {}
     } catch (err) {
-      setPairError(err instanceof Error ? err.message : 'Neplatný kód.');
+      setPairError(err instanceof Error ? err.message : 'Nesprávný PIN moderátora.');
     } finally {
       setPairing(false);
     }
@@ -179,23 +212,20 @@ export function ScreenPage() {
           <p className="text-sm text-[var(--text-secondary)] m-0">{t.auth.screenHint}</p>
           <form onSubmit={handlePairSubmit} className="space-y-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="screen-code" className="font-semibold text-sm">
+              <label htmlFor="screen-pin" className="font-semibold text-sm">
                 {t.auth.screenCodeLabel}
               </label>
               <input
-                id="screen-code"
-                name="code"
-                type="text"
+                id="screen-pin"
+                name="pin"
+                type="password"
+                inputMode="numeric"
+                autoComplete="current-password"
                 required
-                minLength={6}
-                maxLength={8}
-                autoCorrect="off"
-                autoCapitalize="characters"
-                spellCheck={false}
-                value={pairCode}
-                onChange={(e) => setPairCode(e.target.value.toUpperCase())}
-                placeholder="A7B9K2"
-                className="uppercase tracking-widest font-mono text-center text-2xl font-bold"
+                value={screenPin}
+                onChange={(e) => setScreenPin(e.target.value)}
+                placeholder="••••••"
+                className="tracking-widest font-mono text-center text-2xl font-bold"
               />
             </div>
             {pairError && (

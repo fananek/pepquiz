@@ -55,10 +55,10 @@ export const cs = {
     hostHint: 'Zadejte PIN z konfigurace nebo ze spouštěcí konzole serveru.',
     hostPinLabel: 'PIN moderátora',
     hostSubmit: 'Přihlásit se',
-    screenTitle: 'Párování projektoru (/screen)',
-    screenHint: 'Zadejte 6znakový párovací kód z obrazovky moderátora, nebo použijte párovací odkaz.',
-    screenCodeLabel: 'Párovací kód obrazovky',
-    screenSubmit: 'Spárovat projektor',
+    screenTitle: 'Projektor (/screen)',
+    screenHint: 'Zadejte stejný PIN jako pro moderátora, nebo otevřete projektor bez PINu přímo z moderátorského pultu.',
+    screenCodeLabel: 'PIN moderátora',
+    screenSubmit: 'Otevřít projektor',
     logout: 'Odhlásit'
   },
   screen: {
@@ -190,7 +190,7 @@ export const cs = {
     teamsPanelTitle: 'Připojené týmy',
     kickTeam: 'Odebrat tým',
     resetConfirmTitle: 'Resetovat běžící hru?',
-    resetConfirmBody: 'Tato akce vymaže všechny týmy, odpovědi a skóre a vrátí hru do prázdného lobby.',
+    resetConfirmBody: 'Tato akce vymaže všechny týmy, odpovědi a skóre, vygeneruje nový kód hry a vrátí hru do prázdného lobby.',
     shortcutsTitle: 'Klávesové zkratky moderátora'
   },
   play: {

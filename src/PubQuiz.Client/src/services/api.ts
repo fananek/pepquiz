@@ -63,11 +63,21 @@ export const api = {
   logout() {
     return requestJson<{ success: boolean }>('/api/auth/logout', { method: 'POST' });
   },
-  pairScreen(code: string) {
+  pairScreen(payload: { pin?: string; launchToken?: string }) {
     return requestJson<AuthTokenResponse>('/api/auth/screen', {
       method: 'POST',
-      body: JSON.stringify({ code })
+      body: JSON.stringify(payload)
     });
+  },
+  issueScreenTokenFromHost(hostToken: string) {
+    return requestJson<AuthTokenResponse>('/api/host/screen/token', { method: 'POST' }, hostToken);
+  },
+  createScreenLaunchLink(hostToken: string) {
+    return requestJson<{ launchToken: string; launchUrl: string; expiresAtUtc: string }>(
+      '/api/host/screen/launch-link',
+      { method: 'POST' },
+      hostToken
+    );
   },
   joinPlayer(payload: {
     joinCode: string;
@@ -199,7 +209,7 @@ export const api = {
   advanceNext(token: string) {
     return requestJson('/api/host/game/next', { method: 'POST' }, token);
   },
-  resetSession(token: string, resetCodes = false) {
+  resetSession(token: string, resetCodes = true) {
     return requestJson(`/api/host/game/reset?resetCodes=${resetCodes}`, { method: 'POST' }, token);
   },
   overrideEvaluation(token: string, teamId: string, evaluation: AnswerEvaluation) {

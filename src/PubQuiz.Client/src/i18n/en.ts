@@ -57,10 +57,10 @@ export const en: TranslationDict = {
     hostHint: 'Enter the PIN from configuration or server startup logs.',
     hostPinLabel: 'Host PIN',
     hostSubmit: 'Sign In',
-    screenTitle: 'Pair Projector Screen (/screen)',
-    screenHint: 'Enter the 6-character pairing code from the host console or open the pairing link.',
-    screenCodeLabel: 'Screen pairing code',
-    screenSubmit: 'Pair Screen',
+    screenTitle: 'Projector Screen (/screen)',
+    screenHint: 'Enter the same PIN as the host console, or open the projector without a PIN directly from the host console.',
+    screenCodeLabel: 'Host PIN',
+    screenSubmit: 'Open Projector',
     logout: 'Sign Out'
   },
   screen: {
@@ -192,7 +192,7 @@ export const en: TranslationDict = {
     teamsPanelTitle: 'Connected Teams',
     kickTeam: 'Remove team',
     resetConfirmTitle: 'Reset active game?',
-    resetConfirmBody: 'This will clear all teams, answers, and scores and return to an empty lobby.',
+    resetConfirmBody: 'This will clear all teams, answers, and scores, generate a new game code, and return to an empty lobby.',
     shortcutsTitle: 'Host Keyboard Shortcuts'
   },
   play: {

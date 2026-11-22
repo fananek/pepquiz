@@ -245,11 +245,15 @@ export function PlayPage() {
     if (!token) return;
     let active = true;
 
-    const handleConfirmedSessionInvalid = (reason?: string) => {
+    const handleConfirmedSessionInvalid = (reason?: string, clearJoinCode = false) => {
       if (!active) return;
       setToken(null);
       setGameState(null);
       persistToken(null);
+      if (clearJoinCode) {
+        setJoinCode('');
+        setSearchParams({}, { replace: true });
+      }
       if (reason) setSessionMissingNotice(reason);
     };
 
@@ -260,7 +264,8 @@ export function PlayPage() {
         if (!active) return;
         if (info.teamExists === false) {
           handleConfirmedSessionInvalid(
-            'Předchozí hra byla resetována moderátorem. Připojte se prosím znovu.'
+            'Předchozí hra byla resetována moderátorem. Naskenujte prosím nový QR kód nebo zadejte nový kód hry.',
+            true
           );
           return;
         }
@@ -298,7 +303,8 @@ export function PlayPage() {
       },
       onTeamMissing: () => {
         handleConfirmedSessionInvalid(
-          'Tým už v aktuální hře neexistuje (hra byla resetována). Připojte se znovu.'
+          'Tým už v aktuální hře neexistuje (hra byla resetována). Naskenujte prosím nový QR kód nebo zadejte nový kód hry.',
+          true
         );
       }
     });

@@ -27,14 +27,14 @@ MSBuild automaticky a multiplatformně spustí `pnpm install` a `pnpm run build`
 dotnet run --project src/PubQuiz.Server -c Release
 ```
 
-Po spuštění server automaticky vygeneruje lokální TLS certifikát pro aktuální **LAN IP adresu** a vypíše do konzole **HTTPS LAN adresu** (funguje pro všechny telefony na stejné Wi-Fi i bez internetu!), **PIN moderátora**, párovací odkaz pro `/screen` a kód hry pro `/play`:
+Po spuštění server automaticky vygeneruje lokální TLS certifikát pro aktuální **LAN IP adresu** a vypíše do konzole **HTTPS LAN adresu** (funguje pro všechny telefony na stejné Wi-Fi i bez internetu!), **PIN moderátora** (platí pro `/host` i `/screen`) a kód hry pro `/play`:
 
 ```text
 ============================================================
   PubQuiz Engine spuštěn!
   Lokální / LAN adresa : https://192.168.128.71:5443
   Moderátor (/host)    : https://192.168.128.71:5443/host  | PIN: 482910
-  Projektor (/screen)  : https://192.168.128.71:5443/screen?code=K7M2Q8
+  Projektor (/screen)  : https://192.168.128.71:5443/screen  (stejný PIN jako moderátor)
   Hráči (/play)        : https://192.168.128.71:5443/play?join=P4X9R3
   TLS / HTTPS          : aktivní (lokální LAN certifikát)
   Lokální CA certifikát: .../state/certs/pubquiz-ca.crt

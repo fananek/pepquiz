@@ -36,7 +36,13 @@ public sealed class PubQuizOptions
 
 public sealed record HostLoginRequest(string Pin);
 
-public sealed record ScreenPairRequest(string Code);
+public sealed record ScreenPairRequest(string? Pin = null, string? LaunchToken = null, string? Code = null);
+
+public sealed record ScreenLaunchLinkResponse(
+    string LaunchToken,
+    string LaunchUrl,
+    DateTimeOffset ExpiresAtUtc
+);
 
 public sealed record PlayerJoinRequest(
     string JoinCode,

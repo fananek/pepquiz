@@ -766,33 +766,33 @@ export function HostPage() {
                     <div className="text-xs font-extrabold uppercase text-[var(--text-muted)]">
                       Projektor (/screen)
                     </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-semibold">Párovací kód:</span>
-                      <span className="font-mono font-black text-xl tracking-widest px-3 py-1 rounded-lg bg-[var(--bg-surface)]">
-                        {gameState.screenCode}
-                      </span>
+                    <p className="text-xs text-[var(--text-secondary)] m-0 leading-snug">
+                      Chráněno stejným PINem jako moderátor. Odtud projektor otevřete bez zadávání PINu (nebo zkopírujte jednorázový 5min odkaz pro jiný počítač/TV).
+                    </p>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <a
+                        href="/screen"
+                        target="_blank"
+                        rel="noopener"
+                        className="btn-primary !py-2 !px-3 !min-h-[40px] text-sm no-underline"
+                      >
+                        <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                        {t.host.openScreenLink}
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          runAction(async () => {
+                            const res = await api.createScreenLaunchLink(token);
+                            copyToClipboard(res.launchUrl, 'screen');
+                          })
+                        }
+                        className="btn-secondary !py-2 !px-3 !min-h-[40px] text-sm"
+                      >
+                        <Copy className="w-4 h-4" aria-hidden="true" />
+                        {copiedKey === 'screen' ? 'Jednorázový odkaz zkopírován!' : 'Jednorázový odkaz (5 min)'}
+                      </button>
                     </div>
-                    {gameState.screenUrl && /^https?:\/\//i.test(gameState.screenUrl) && (
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        <a
-                          href={gameState.screenUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-primary !py-2 !px-3 !min-h-[40px] text-sm no-underline"
-                        >
-                          <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                          {t.host.openScreenLink}
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => copyToClipboard(gameState.screenUrl!, 'screen')}
-                          className="btn-secondary !py-2 !px-3 !min-h-[40px] text-sm"
-                        >
-                          <Copy className="w-4 h-4" aria-hidden="true" />
-                          {copiedKey === 'screen' ? t.host.copied : t.host.copyLink}
-                        </button>
-                      </div>
-                    )}
                   </div>
 
                   <div className="elevated-card p-4 flex items-center justify-between gap-3">
@@ -1940,7 +1940,7 @@ export function HostPage() {
             <button
               type="button"
               onClick={async () => {
-                await runAction(() => api.resetSession(token, false));
+                await runAction(() => api.resetSession(token, true));
                 setResetOpen(false);
               }}
               className="btn-danger"
@@ -2019,7 +2019,7 @@ export function HostPage() {
               </div>
               <p className="text-sm font-semibold m-0 leading-snug">
                 Aktuálně běží <strong>„{gameState.quizTitle}“</strong> ({t.states[gameState.state]}).
-                Načtením balíčku se <strong>nevratně vynulují veškeré body, odpovědi i průběh hry</strong> a hra se vrátí do Lobby (připojené týmy zůstanou zachovány).
+                Načtením balíčku se <strong>nevratně vynulují veškeré body, odpovědi i průběh hry</strong>, vygeneruje se nový kód hry a hra se vrátí do Lobby (připojené týmy zůstanou zachovány).
               </p>
             </div>
           )}

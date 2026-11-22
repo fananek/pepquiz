@@ -108,6 +108,7 @@ public sealed class GameEngineService : IDisposable
 
     public string JoinCode => _session.JoinCode;
     public string ScreenCode => _session.ScreenCode;
+    public string PublicBaseUrl => _cachedBaseUrl;
 
     public void UpdatePublicBaseUrlFromRequest(string? scheme, string? host)
     {
@@ -440,6 +441,7 @@ public sealed class GameEngineService : IDisposable
             _teamConnections.Remove(teamId);
             _persistence.SaveSessionAtomic(_session);
             await BroadcastStateUnlockedAsync();
+            await NotifyRemovedTeamsUnlockedAsync([teamId]);
             return new OperationResult(true);
         }
         finally
@@ -513,6 +515,8 @@ public sealed class GameEngineService : IDisposable
                 team.PointsByRound.Clear();
             }
 
+            _session.SessionId = Guid.NewGuid().ToString("N")[..10];
+            _session.JoinCode = GenerateDifferentCode(_session.JoinCode, 6);
             _session.QuizId = quiz.Id;
             _session.QuizLanguage = string.IsNullOrWhiteSpace(language) ? quiz.DefaultLanguage : language;
             _session.AutoStartTimer = quiz.Settings.AutoStartTimer;
@@ -575,17 +579,18 @@ public sealed class GameEngineService : IDisposable
         }
     }
 
-    public async Task<OperationResult> ResetSessionAsync(bool resetCodes = false)
+    public async Task<OperationResult> ResetSessionAsync(bool resetCodes = true)
     {
         await _lock.WaitAsync();
         try
         {
+            var previousTeamIds = _session.Teams.Keys.ToList();
             CancelTimerUnlocked();
             var quizId = _session.QuizId;
             var quizLang = _session.QuizLanguage;
             var autoStart = _session.AutoStartTimer;
-            var joinCode = resetCodes ? GenerateCode(6) : _session.JoinCode;
-            var screenCode = resetCodes ? GenerateCode(6) : _session.ScreenCode;
+            var joinCode = resetCodes ? GenerateDifferentCode(_session.JoinCode, 6) : _session.JoinCode;
+            var screenCode = resetCodes ? GenerateDifferentCode(_session.ScreenCode, 6) : _session.ScreenCode;
 
             _session = CreateFreshSession(joinCode, screenCode);
             _session.QuizId = quizId;
@@ -598,6 +603,7 @@ public sealed class GameEngineService : IDisposable
 
             _persistence.SaveSessionAtomic(_session);
             await BroadcastStateUnlockedAsync();
+            await NotifyRemovedTeamsUnlockedAsync(previousTeamIds);
             return new OperationResult(true);
         }
         finally
@@ -1970,6 +1976,24 @@ public sealed class GameEngineService : IDisposable
         }
     }
 
+    private async Task NotifyRemovedTeamsUnlockedAsync(IEnumerable<string> teamIds)
+    {
+        var tasks = teamIds
+            .Select(id => _hubContext.Clients.Group(QuizHub.TeamGroup(id)).SendAsync("SessionTeamMissing"))
+            .ToList();
+        if (tasks.Count == 0)
+            return;
+
+        try
+        {
+            await Task.WhenAll(tasks);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to notify removed teams.");
+        }
+    }
+
     private GameStateBroadcastDto BuildSnapshotUnlocked(string role, string? teamId)
     {
         var now = DateTimeOffset.UtcNow;
@@ -2316,7 +2340,7 @@ public sealed class GameEngineService : IDisposable
             : BuildDefaultRules(_loadedQuiz);
 
         var joinUrl = $"{_cachedBaseUrl}/play?join={Uri.EscapeDataString(_session.JoinCode)}";
-        var screenUrl = isHost ? $"{_cachedBaseUrl}/screen?code={Uri.EscapeDataString(_session.ScreenCode)}" : null;
+        var screenUrl = isHost ? $"{_cachedBaseUrl}/screen" : null;
         var answeredCount = currentAnswers.Values.Count(a => a.SubmissionId != "missed-joker");
 
         var canReturn = _session.State is GameState.Lobby or GameState.Leaderboard && _session.ReturnScreen is not null;
@@ -2532,6 +2556,17 @@ public sealed class GameEngineService : IDisposable
         for (var i = 0; i < length; i++)
             chars[i] = alphabet[RandomNumberGenerator.GetInt32(alphabet.Length)];
         return new string(chars);
+    }
+
+    private static string GenerateDifferentCode(string? previousCode, int length = 6)
+    {
+        for (var attempt = 0; attempt < 16; attempt++)
+        {
+            var candidate = GenerateCode(length);
+            if (!string.Equals(candidate, previousCode, StringComparison.OrdinalIgnoreCase))
+                return candidate;
+        }
+        return GenerateCode(length);
     }
 
     private static string SanitizeTeamName(string? name)

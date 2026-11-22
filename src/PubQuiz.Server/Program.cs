@@ -421,10 +421,16 @@ app.MapPost("/api/auth/host", (HostLoginRequest req, JwtTokenService tokens) =>
     return Results.Ok(new AuthTokenResponse(jwt, QuizRoles.Host, null, null, expires));
 }).RequireRateLimiting("auth-strict");
 
-app.MapPost("/api/auth/screen", (ScreenPairRequest req, GameEngineService engine, JwtTokenService tokens) =>
+app.MapPost("/api/auth/screen", (ScreenPairRequest req, JwtTokenService tokens) =>
 {
-    if (!engine.VerifyScreenCode(req.Code))
-        return Results.Json(new { error = "Neplatný párovací kód obrazovky." }, statusCode: StatusCodes.Status401Unauthorized);
+    var authorized = !string.IsNullOrWhiteSpace(req.LaunchToken)
+        ? tokens.ConsumeScreenLaunchToken(req.LaunchToken)
+        : tokens.VerifyHostPin(req.Pin);
+
+    if (!authorized)
+        return Results.Json(
+            new { error = "Nesprávný PIN moderátora nebo neplatný jednorázový odkaz pro projektor." },
+            statusCode: StatusCodes.Status401Unauthorized);
 
     var (jwt, expires) = tokens.IssueToken(QuizRoles.Screen);
     return Results.Ok(new AuthTokenResponse(jwt, QuizRoles.Screen, null, null, expires));
@@ -613,7 +619,7 @@ hostApi.MapPost("/game/next", async (GameEngineService engine) =>
 
 hostApi.MapPost("/game/reset", async (bool? resetCodes, GameEngineService engine) =>
 {
-    var res = await engine.ResetSessionAsync(resetCodes ?? false);
+    var res = await engine.ResetSessionAsync(resetCodes ?? true);
     return res.Success ? Results.Ok(res) : Results.BadRequest(new { error = res.Error });
 });
 
@@ -645,6 +651,21 @@ hostApi.MapDelete("/screen/banner", async (GameEngineService engine) =>
 {
     var res = await engine.ClearScreenBannerAsync();
     return res.Success ? Results.Ok(res) : Results.BadRequest(new { error = res.Error });
+});
+
+// Allows an authenticated Host browser session to open /screen without re-entering PIN
+hostApi.MapPost("/screen/token", (JwtTokenService tokens) =>
+{
+    var (jwt, expires) = tokens.IssueToken(QuizRoles.Screen);
+    return Results.Ok(new AuthTokenResponse(jwt, QuizRoles.Screen, null, null, expires));
+});
+
+// Creates a single-use, 5-minute launch URL for opening /screen on another computer/TV without typing PIN
+hostApi.MapPost("/screen/launch-link", (GameEngineService engine, JwtTokenService tokens) =>
+{
+    var (launchToken, expires) = tokens.CreateScreenLaunchToken();
+    var launchUrl = $"{engine.PublicBaseUrl}/screen?launch={Uri.EscapeDataString(launchToken)}";
+    return Results.Ok(new ScreenLaunchLinkResponse(launchToken, launchUrl, expires));
 });
 
 hostApi.MapPost("/players/message", async (SendPlayerMessageRequest req, GameEngineService engine) =>
@@ -801,7 +822,7 @@ app.Lifetime.ApplicationStarted.Register(() =>
           PubQuiz Engine spuštěn!
           Lokální / LAN adresa : {BaseUrl}
           Moderátor (/host)    : {HostUrl}  | PIN: {HostPin}
-          Projektor (/screen)  : {ScreenUrl}
+          Projektor (/screen)  : {ScreenUrl}  (stejný PIN jako moderátor)
           Hráči (/play)        : {PlayUrl}
         {TlsInfo}{CaHint}
         ============================================================
@@ -809,7 +830,7 @@ app.Lifetime.ApplicationStarted.Register(() =>
         baseUrl,
         $"{baseUrl}/host",
         tokens.HostPin,
-        $"{baseUrl}/screen?code={engine.ScreenCode}",
+        $"{baseUrl}/screen",
         $"{baseUrl}/play?join={engine.JoinCode}",
         tlsInfoLine,
         caHintLine);
