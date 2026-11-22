@@ -284,6 +284,13 @@ public sealed record RoundOverviewDto(
     List<string> QuestionIds
 );
 
+public sealed record ManualScoreAdjustmentDto(
+    string Id,
+    int Delta,
+    string Reason,
+    DateTimeOffset CreatedAtUtc
+);
+
 public sealed record HostTeamInfoDto(
     string TeamId,
     string Name,
@@ -293,7 +300,8 @@ public sealed record HostTeamInfoDto(
     bool IsConnected,
     string RecoveryCode,
     string ReconnectUrl,
-    int PreSelectedJokersCount
+    int PreSelectedJokersCount,
+    List<ManualScoreAdjustmentDto> ManualAdjustments
 );
 
 public sealed record PublicTeamSummaryDto(

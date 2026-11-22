@@ -1200,12 +1200,19 @@ public sealed class GameEngineService : IDisposable
             if (!_session.Teams.TryGetValue(req.TeamId, out var team))
                 return new OperationResult(false, "Tým nebyl nalezen.");
 
+            var reason = SanitizeLength(req.Reason, MaxReasonLength);
+            if (string.IsNullOrWhiteSpace(reason))
+                return new OperationResult(false, "Zadejte důvod ruční úpravy bodů.");
+
+            if (req.Delta == 0)
+                return new OperationResult(false, "Změna bodů nemůže být 0.");
+
             var clampedDelta = Math.Clamp(req.Delta, -1_000_000, 1_000_000);
             team.Score += clampedDelta;
             team.ManualAdjustments.Add(new ManualScoreAdjustment
             {
                 Delta = clampedDelta,
-                Reason = string.IsNullOrWhiteSpace(req.Reason) ? "Ruční korekce moderátora" : SanitizeLength(req.Reason, MaxReasonLength),
+                Reason = reason,
                 CreatedAtUtc = DateTimeOffset.UtcNow
             });
 
@@ -2221,7 +2228,11 @@ public sealed class GameEngineService : IDisposable
                 t.IsConnected,
                 t.RecoveryCode,
                 $"{_cachedBaseUrl}/play?rejoin={Uri.EscapeDataString(t.RecoveryCode)}",
-                t.PreSelectedJokerQuestionIds.Count
+                t.PreSelectedJokerQuestionIds.Count,
+                t.ManualAdjustments
+                    .OrderByDescending(m => m.CreatedAtUtc)
+                    .Select(m => new ManualScoreAdjustmentDto(m.Id, m.Delta, m.Reason, m.CreatedAtUtc))
+                    .ToList()
             )).ToList();
 
             var approvedCounts = _session.BonusTaskClaims

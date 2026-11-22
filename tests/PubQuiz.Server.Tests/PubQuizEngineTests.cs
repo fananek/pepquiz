@@ -718,6 +718,54 @@ public sealed class GameEngineIntegrationTests : IDisposable
         Assert.Equal(codeAfterReset, engine2.JoinCode);
     }
 
+    [Fact]
+    public async Task AdjustTeamScore_RequiresReasonAndExposesFullHistoryToHost()
+    {
+        string teamId;
+        {
+            var (engine, _) = CreateEngine();
+            using var _d = engine;
+            await engine.LoadQuizAsync("test-quiz");
+            var (ok, team, _) = await engine.JoinOrReconnectTeamAsync(engine.JoinCode, "Korekční tým", "owl", "#b45309", null);
+            Assert.True(ok);
+            teamId = team!.Id;
+
+            // Missing or whitespace-only reason MUST be rejected without changing score
+            var emptyRes = await engine.AdjustTeamScoreAsync(new ManualScoreAdjustmentRequest(teamId, 250, ""));
+            Assert.False(emptyRes.Success);
+            var spacesRes = await engine.AdjustTeamScoreAsync(new ManualScoreAdjustmentRequest(teamId, 250, "   "));
+            Assert.False(spacesRes.Success);
+
+            // Zero delta MUST be rejected
+            var zeroRes = await engine.AdjustTeamScoreAsync(new ManualScoreAdjustmentRequest(teamId, 0, "Nulová korekce"));
+            Assert.False(zeroRes.Success);
+
+            // Valid adjustments with reasons succeed and preserve complete history
+            Assert.True((await engine.AdjustTeamScoreAsync(new ManualScoreAdjustmentRequest(teamId, 500, "Uznaný překlep v otázce 2"))).Success);
+            await Task.Delay(15);
+            Assert.True((await engine.AdjustTeamScoreAsync(new ManualScoreAdjustmentRequest(teamId, -250, "Pozdní oprava bodování"))).Success);
+
+            var hostSnap = await engine.BuildSnapshotAsync(QuizRoles.Host);
+            var hostTeam = hostSnap.HostTeams!.Single(ht => ht.TeamId == teamId);
+            Assert.Equal(250, hostTeam.Score);
+            Assert.Equal(2, hostTeam.ManualAdjustments.Count);
+            // Ordered newest first
+            Assert.Equal(-250, hostTeam.ManualAdjustments[0].Delta);
+            Assert.Equal("Pozdní oprava bodování", hostTeam.ManualAdjustments[0].Reason);
+            Assert.Equal(500, hostTeam.ManualAdjustments[1].Delta);
+            Assert.Equal("Uznaný překlep v otázce 2", hostTeam.ManualAdjustments[1].Reason);
+        }
+
+        // Persists across restart
+        var (engine2, _) = CreateEngine();
+        using var _d2 = engine2;
+        var reloaded = await engine2.BuildSnapshotAsync(QuizRoles.Host);
+        var reloadedTeam = reloaded.HostTeams!.Single(ht => ht.TeamId == teamId);
+        Assert.Equal(2, reloadedTeam.ManualAdjustments.Count);
+        Assert.Equal("Pozdní oprava bodování", reloadedTeam.ManualAdjustments[0].Reason);
+        Assert.Equal("Uznaný překlep v otázce 2", reloadedTeam.ManualAdjustments[1].Reason);
+    }
+
     private static Microsoft.AspNetCore.Http.IFormFile CreateFormFile(string fileName, string content)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(content);

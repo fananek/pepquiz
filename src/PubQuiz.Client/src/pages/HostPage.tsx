@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AlertTriangle,
@@ -49,7 +49,7 @@ import { QrCodeDisplay } from '../components/QrCodeDisplay';
 const HOST_TOKEN_KEY = 'pubquiz-host-token';
 
 export function HostPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [token, setToken] = useState<string | null>(() => {
     try {
       return localStorage.getItem(HOST_TOKEN_KEY);
@@ -85,6 +85,14 @@ export function HostPage() {
   const [taskComments, setTaskComments] = useState<Record<string, string>>({});
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
+  const [removeTeamTarget, setRemoveTeamTarget] = useState<{
+    teamId: string;
+    name: string;
+    avatarId: string;
+    avatarColor: string;
+    score: number;
+  } | null>(null);
+  const [removingTeam, setRemovingTeam] = useState(false);
 
   // Modal form states
   const [editTimeLimit, setEditTimeLimit] = useState(30);
@@ -104,6 +112,12 @@ export function HostPage() {
 
   const [scoreDelta, setScoreDelta] = useState<number>(250);
   const [scoreReason, setScoreReason] = useState('');
+  const [scoreDeltaError, setScoreDeltaError] = useState<string | null>(null);
+  const [scoreReasonError, setScoreReasonError] = useState<string | null>(null);
+  const [scoreSubmitError, setScoreSubmitError] = useState<string | null>(null);
+  const [submittingScore, setSubmittingScore] = useState(false);
+  const scoreDeltaInputRef = useRef<HTMLInputElement>(null);
+  const scoreReasonInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     document.title = `${t.host.title} | PubQuiz Engine`;
@@ -208,7 +222,7 @@ export function HostPage() {
       ) {
         return;
       }
-      if (loadQuizOpen || editOpen || screenMsgOpen || playerMsgOpen || scoreModalTeam || reconnectTeam || directAwardOpen || resetOpen || shortcutsOpen) {
+      if (loadQuizOpen || editOpen || screenMsgOpen || playerMsgOpen || scoreModalTeam || reconnectTeam || directAwardOpen || resetOpen || removeTeamTarget || shortcutsOpen) {
         return;
       }
 
@@ -264,6 +278,7 @@ export function HostPage() {
     reconnectTeam,
     directAwardOpen,
     resetOpen,
+    removeTeamTarget,
     shortcutsOpen,
     runAction,
     openEditQuestionModal
@@ -1452,37 +1467,60 @@ export function HostPage() {
                     <div className="flex items-center gap-1 shrink-0">
                       {(() => {
                         const info = gameState.hostTeams?.find((ht) => ht.teamId === team.teamId);
-                        if (!info) return null;
+                        const adjCount = info?.manualAdjustments?.length ?? 0;
                         return (
-                          <button
-                            type="button"
-                            onClick={() => setReconnectTeam(info)}
-                            aria-label={`${t.host.teamReconnectTitle}: ${team.name}`}
-                            title={`${t.host.teamRecoveryCodeLabel}: ${info.recoveryCode}`}
-                            className="btn-secondary !px-2 !py-1.5 !min-h-[36px] text-xs font-mono"
-                          >
-                            <KeyRound className="w-3.5 h-3.5" aria-hidden="true" />
-                            <span>{info.recoveryCode}</span>
-                          </button>
+                          <>
+                            {info && (
+                              <button
+                                type="button"
+                                onClick={() => setReconnectTeam(info)}
+                                aria-label={`${t.host.teamReconnectTitle}: ${team.name}`}
+                                title={`${t.host.teamRecoveryCodeLabel}: ${info.recoveryCode}`}
+                                className="btn-secondary !px-2 !py-1.5 !min-h-[36px] text-xs font-mono"
+                              >
+                                <KeyRound className="w-3.5 h-3.5" aria-hidden="true" />
+                                <span>{info.recoveryCode}</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setScoreModalTeam({ id: team.teamId, name: team.name });
+                                setScoreDelta(250);
+                                setScoreReason('');
+                                setScoreDeltaError(null);
+                                setScoreReasonError(null);
+                                setScoreSubmitError(null);
+                              }}
+                              aria-label={`${t.host.manualScoreTitle}: ${team.name}`}
+                              className="btn-secondary !px-2.5 !py-1.5 !min-h-[36px] text-xs"
+                            >
+                              <PlusCircle className="w-3.5 h-3.5" aria-hidden="true" />
+                              <span>± Body</span>
+                              {adjCount > 0 && (
+                                <span
+                                  className="px-1.5 py-0.5 rounded-full bg-[var(--accent-soft)] text-[var(--accent)] text-[10px] font-black leading-none tabular-nums"
+                                  title={`${t.host.scoreHistoryTitle}: ${adjCount}`}
+                                >
+                                  {adjCount}
+                                </span>
+                              )}
+                            </button>
+                          </>
                         );
                       })()}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setScoreModalTeam({ id: team.teamId, name: team.name });
-                          setScoreDelta(250);
-                          setScoreReason('');
-                        }}
-                        aria-label={`${t.host.manualScoreTitle}: ${team.name}`}
-                        className="btn-secondary !px-2.5 !py-1.5 !min-h-[36px] text-xs"
-                      >
-                        <PlusCircle className="w-3.5 h-3.5" aria-hidden="true" />
-                        ± Body
-                      </button>
                       {gameState.state === 'Lobby' && (
                         <button
                           type="button"
-                          onClick={() => runAction(() => api.removeTeam(token, team.teamId))}
+                          onClick={() =>
+                            setRemoveTeamTarget({
+                              teamId: team.teamId,
+                              name: team.name,
+                              avatarId: team.avatarId,
+                              avatarColor: team.avatarColor,
+                              score: team.score
+                            })
+                          }
                           aria-label={`${t.host.kickTeam}: ${team.name}`}
                           className="btn-secondary !p-1.5 !min-h-[36px] text-[var(--danger)]"
                         >
@@ -1815,67 +1853,276 @@ export function HostPage() {
         </form>
       </ModalDialog>
 
-      {/* MODAL 4: Manual Score Adjustment */}
+      {/* MODAL 4: Manual Score Adjustment + Full Adjustment History */}
       <ModalDialog
         open={scoreModalTeam !== null}
-        onClose={() => setScoreModalTeam(null)}
+        onClose={() => {
+          if (!submittingScore) setScoreModalTeam(null);
+        }}
         title={`${t.host.manualScoreTitle}: ${scoreModalTeam?.name ?? ''}`}
       >
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!scoreModalTeam) return;
-            await runAction(() => api.adjustTeamScore(token, scoreModalTeam.id, scoreDelta, scoreReason));
-            setScoreModalTeam(null);
-          }}
-          className="space-y-4"
-        >
-          <div className="flex flex-wrap gap-2">
-            {[-500, -250, +250, +500, +1000].map((v) => (
-              <button
-                key={v}
-                type="button"
-                onClick={() => setScoreDelta(v)}
-                className={`btn-secondary !py-1.5 !px-3 !min-h-[38px] text-sm font-black ${
-                  scoreDelta === v ? '!border-[var(--accent)] !bg-[var(--accent-soft)]' : ''
-                }`}
+        {scoreModalTeam && (() => {
+          const liveTeam = gameState.hostTeams?.find((ht) => ht.teamId === scoreModalTeam.id) ?? null;
+          const adjustments = liveTeam?.manualAdjustments ?? [];
+          const manualNetTotal = adjustments.reduce((sum, item) => sum + item.delta, 0);
+          const locale = lang === 'en' ? 'en-GB' : 'cs-CZ';
+
+          return (
+            <div className="space-y-5">
+              {liveTeam && (
+                <div className="elevated-card p-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <TeamAvatar avatarId={liveTeam.avatarId} avatarColor={liveTeam.avatarColor} size="sm" />
+                    <span className="font-extrabold text-sm truncate">{liveTeam.name}</span>
+                  </div>
+                  <span className="text-sm font-black text-[var(--accent)] tabular-nums shrink-0">
+                    {liveTeam.score.toLocaleString(locale)} b.
+                  </span>
+                </div>
+              )}
+
+              <form
+                key={scoreModalTeam.id}
+                method="POST"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  setScoreSubmitError(null);
+
+                  const deltaInvalid = Number.isNaN(scoreDelta) || scoreDelta === 0;
+                  const trimmedReason = scoreReason.trim();
+                  const reasonInvalid = trimmedReason.length === 0;
+
+                  setScoreDeltaError(deltaInvalid ? t.host.scoreDeltaZeroError : null);
+                  setScoreReasonError(reasonInvalid ? t.host.scoreReasonRequiredError : null);
+
+                  if (deltaInvalid) {
+                    scoreDeltaInputRef.current?.setCustomValidity(t.host.scoreDeltaZeroError);
+                    scoreDeltaInputRef.current?.focus();
+                    return;
+                  }
+                  if (reasonInvalid) {
+                    scoreReasonInputRef.current?.focus();
+                    return;
+                  }
+
+                  setSubmittingScore(true);
+                  try {
+                    await api.adjustTeamScore(token, scoreModalTeam.id, scoreDelta, trimmedReason);
+                    setScoreModalTeam(null);
+                  } catch (err) {
+                    setScoreSubmitError(err instanceof Error ? err.message : 'Akce se nezdařila.');
+                  } finally {
+                    setSubmittingScore(false);
+                  }
+                }}
+                className="space-y-4"
               >
-                {v > 0 ? `+${v}` : v}
-              </button>
-            ))}
-          </div>
+                <div className="flex flex-wrap gap-2">
+                  {[-500, -250, +250, +500, +1000].map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => {
+                        setScoreDelta(v);
+                        setScoreDeltaError(null);
+                        setScoreSubmitError(null);
+                        scoreDeltaInputRef.current?.setCustomValidity('');
+                      }}
+                      className={`btn-secondary !py-1.5 !px-3 !min-h-[38px] text-sm font-black ${
+                        scoreDelta === v ? '!border-[var(--accent)] !bg-[var(--accent-soft)]' : ''
+                      }`}
+                    >
+                      {v > 0 ? `+${v}` : v}
+                    </button>
+                  ))}
+                </div>
 
-          <div className="flex flex-col gap-1">
-            <label htmlFor="score-delta" className="text-xs font-bold">{t.host.scoreDeltaLabel}</label>
-            <input
-              id="score-delta"
-              type="number"
-              required
-              value={scoreDelta}
-              onChange={(e) => setScoreDelta(Number(e.target.value))}
-            />
-          </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="score-delta" className="text-xs font-bold">
+                    {t.host.scoreDeltaLabel} <span aria-hidden="true" className="text-[var(--danger)]">*</span>
+                  </label>
+                  <input
+                    ref={scoreDeltaInputRef}
+                    id="score-delta"
+                    name="delta"
+                    type="number"
+                    required
+                    value={scoreDelta}
+                    aria-invalid={scoreDeltaError ? 'true' : 'false'}
+                    aria-describedby={scoreDeltaError ? 'score-delta-error' : undefined}
+                    onInvalid={(e) => {
+                      e.preventDefault();
+                      setScoreDeltaError(t.host.scoreDeltaZeroError);
+                      scoreDeltaInputRef.current?.focus();
+                    }}
+                    onBlur={(e) => {
+                      const val = Number(e.currentTarget.value);
+                      if (e.currentTarget.matches(':user-invalid') || Number.isNaN(val) || val === 0) {
+                        e.currentTarget.setCustomValidity(t.host.scoreDeltaZeroError);
+                        setScoreDeltaError(t.host.scoreDeltaZeroError);
+                      }
+                    }}
+                    onChange={(e) => {
+                      const next = Number(e.target.value);
+                      setScoreDelta(next);
+                      e.currentTarget.setCustomValidity('');
+                      if (scoreDeltaError && !Number.isNaN(next) && next !== 0) {
+                        setScoreDeltaError(null);
+                      }
+                      if (scoreSubmitError) setScoreSubmitError(null);
+                    }}
+                  />
+                  {scoreDeltaError && (
+                    <div
+                      id="score-delta-error"
+                      className="text-xs font-semibold text-[var(--danger)] flex items-center gap-1.5 mt-0.5"
+                    >
+                      <XCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <span>{scoreDeltaError}</span>
+                    </div>
+                  )}
+                </div>
 
-          <div className="flex flex-col gap-1">
-            <label htmlFor="score-reason" className="text-xs font-bold">{t.host.scoreReasonLabel}</label>
-            <input
-              id="score-reason"
-              type="text"
-              value={scoreReason}
-              onChange={(e) => setScoreReason(e.target.value)}
-              placeholder="Např. Uznaná bonusová odpověď / korekce překlepu"
-            />
-          </div>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="score-reason" className="text-xs font-bold">
+                    {t.host.scoreReasonLabel} <span aria-hidden="true" className="text-[var(--danger)]">*</span>
+                  </label>
+                  <input
+                    ref={scoreReasonInputRef}
+                    id="score-reason"
+                    name="reason"
+                    type="text"
+                    required
+                    pattern=".*\S.*"
+                    maxLength={200}
+                    enterKeyHint="done"
+                    value={scoreReason}
+                    aria-invalid={scoreReasonError ? 'true' : 'false'}
+                    aria-describedby={scoreReasonError ? 'score-reason-error' : undefined}
+                    onInvalid={(e) => {
+                      e.preventDefault();
+                      setScoreReasonError(t.host.scoreReasonRequiredError);
+                      scoreReasonInputRef.current?.focus();
+                    }}
+                    onBlur={(e) => {
+                      if (
+                        e.currentTarget.matches(':user-invalid') ||
+                        (scoreReason.length > 0 && scoreReason.trim().length === 0)
+                      ) {
+                        setScoreReasonError(t.host.scoreReasonRequiredError);
+                      }
+                    }}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setScoreReason(val);
+                      e.currentTarget.setCustomValidity('');
+                      if (scoreReasonError && val.trim().length > 0) {
+                        setScoreReasonError(null);
+                      }
+                      if (scoreSubmitError) setScoreSubmitError(null);
+                    }}
+                    placeholder={t.host.scoreReasonPlaceholder}
+                  />
+                  {scoreReasonError && (
+                    <div
+                      id="score-reason-error"
+                      className="text-xs font-semibold text-[var(--danger)] flex items-center gap-1.5 mt-0.5"
+                    >
+                      <XCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <span>{scoreReasonError}</span>
+                    </div>
+                  )}
+                </div>
 
-          <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setScoreModalTeam(null)} className="btn-secondary">
-              {t.app.cancel}
-            </button>
-            <button type="submit" className="btn-primary">
-              {t.host.applyScore}
-            </button>
-          </div>
-        </form>
+                {scoreSubmitError && (
+                  <div
+                    role="alert"
+                    className="p-3 rounded-xl bg-[var(--danger-soft)] text-[var(--danger)] text-xs font-semibold flex items-center gap-2"
+                  >
+                    <AlertTriangle className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    <span>{scoreSubmitError}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    disabled={submittingScore}
+                    onClick={() => setScoreModalTeam(null)}
+                    className="btn-secondary"
+                  >
+                    {t.app.cancel}
+                  </button>
+                  <button type="submit" disabled={submittingScore} className="btn-primary">
+                    {t.host.applyScore}
+                  </button>
+                </div>
+              </form>
+
+              <section className="pt-4 border-t border-[var(--border-subtle)] space-y-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-[var(--text-muted)] m-0 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>
+                      {t.host.scoreHistoryTitle} ({adjustments.length})
+                    </span>
+                  </h3>
+                  {adjustments.length > 0 && (
+                    <span
+                      className={`text-xs font-black tabular-nums px-2 py-0.5 rounded-full ${
+                        manualNetTotal > 0
+                          ? 'bg-[var(--success-soft)] text-[var(--success)]'
+                          : manualNetTotal < 0
+                            ? 'bg-[var(--danger-soft)] text-[var(--danger)]'
+                            : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      {t.host.scoreHistoryTotal}: {manualNetTotal > 0 ? `+${manualNetTotal.toLocaleString(locale)}` : manualNetTotal.toLocaleString(locale)} b.
+                    </span>
+                  )}
+                </div>
+
+                {adjustments.length === 0 ? (
+                  <p className="text-xs text-[var(--text-muted)] m-0 italic">{t.host.scoreHistoryEmpty}</p>
+                ) : (
+                  <ul className="list-none p-0 m-0 space-y-2 max-h-60 overflow-y-auto pr-1">
+                    {adjustments.map((adj) => (
+                      <li
+                        key={adj.id}
+                        className="elevated-card p-2.5 flex items-start justify-between gap-3 text-sm"
+                      >
+                        <div className="min-w-0 space-y-0.5">
+                          <div className="font-semibold text-[var(--text-primary)] break-words">
+                            {adj.reason}
+                          </div>
+                          <time
+                            dateTime={adj.createdAtUtc}
+                            className="block text-[11px] font-medium text-[var(--text-muted)] tabular-nums"
+                          >
+                            {new Date(adj.createdAtUtc).toLocaleTimeString(locale, {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              second: '2-digit'
+                            })}
+                          </time>
+                        </div>
+                        <span
+                          className={`shrink-0 px-2 py-0.5 rounded-lg text-xs font-black tabular-nums ${
+                            adj.delta > 0
+                              ? 'bg-[var(--success-soft)] text-[var(--success)]'
+                              : 'bg-[var(--danger-soft)] text-[var(--danger)]'
+                          }`}
+                        >
+                          {adj.delta > 0 ? `+${adj.delta.toLocaleString(locale)}` : adj.delta.toLocaleString(locale)} b.
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            </div>
+          );
+        })()}
       </ModalDialog>
 
       {/* MODAL 5: Keyboard Shortcuts */}
@@ -1931,6 +2178,9 @@ export function HostPage() {
           <div className="flex justify-end gap-2">
             <button
               type="button"
+              ref={(el) => {
+                if (el) el.autofocus = true;
+              }}
               autoFocus
               onClick={() => setResetOpen(false)}
               className="btn-secondary"
@@ -1949,6 +2199,70 @@ export function HostPage() {
             </button>
           </div>
         </div>
+      </ModalDialog>
+
+      {/* MODAL 6b: Destructive Remove Team Confirmation (native <dialog>, autofocus on safe Cancel) */}
+      <ModalDialog
+        open={removeTeamTarget !== null}
+        onClose={() => {
+          if (!removingTeam) setRemoveTeamTarget(null);
+        }}
+        title={t.host.kickTeamConfirmTitle}
+        lightDismiss={false}
+      >
+        {removeTeamTarget && (
+          <div className="space-y-4">
+            <div className="elevated-card p-3 flex items-center gap-3">
+              <TeamAvatar
+                avatarId={removeTeamTarget.avatarId}
+                avatarColor={removeTeamTarget.avatarColor}
+                size="sm"
+              />
+              <div className="min-w-0">
+                <div className="font-extrabold text-sm truncate">{removeTeamTarget.name}</div>
+                <div className="text-xs font-bold text-[var(--accent)] tabular-nums">
+                  {removeTeamTarget.score.toLocaleString('cs-CZ')} b.
+                </div>
+              </div>
+            </div>
+            <p className="m-0 text-sm text-[var(--text-secondary)] flex items-start gap-2.5">
+              <AlertTriangle className="w-5 h-5 text-[var(--danger)] shrink-0 mt-0.5" aria-hidden="true" />
+              <span>{formatTemplate(t.host.kickTeamConfirmBody, { name: removeTeamTarget.name })}</span>
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                ref={(el) => {
+                  if (el) el.autofocus = true;
+                }}
+                autoFocus
+                disabled={removingTeam}
+                onClick={() => setRemoveTeamTarget(null)}
+                className="btn-secondary"
+              >
+                {t.app.cancel}
+              </button>
+              <button
+                type="button"
+                disabled={removingTeam}
+                onClick={async () => {
+                  const targetId = removeTeamTarget.teamId;
+                  setRemovingTeam(true);
+                  try {
+                    await runAction(() => api.removeTeam(token, targetId));
+                    setRemoveTeamTarget(null);
+                  } finally {
+                    setRemovingTeam(false);
+                  }
+                }}
+                className="btn-danger"
+              >
+                <Trash2 className="w-4 h-4" aria-hidden="true" />
+                <span>{t.host.kickTeam}</span>
+              </button>
+            </div>
+          </div>
+        )}
       </ModalDialog>
       {/* MODAL 7: Team Reconnection QR & Recovery Code */}
       <ModalDialog

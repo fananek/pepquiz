@@ -190,6 +190,13 @@ export interface EveningStatistics {
   totalAnswersSubmitted: number;
 }
 
+export interface ManualScoreAdjustment {
+  id: string;
+  delta: number;
+  reason: string;
+  createdAtUtc: string;
+}
+
 export interface HostTeamInfo {
   teamId: string;
   name: string;
@@ -200,6 +207,7 @@ export interface HostTeamInfo {
   recoveryCode: string;
   reconnectUrl: string;
   preSelectedJokersCount: number;
+  manualAdjustments: ManualScoreAdjustment[];
 }
 
 export interface PublicTeamSummary {
