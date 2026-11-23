@@ -522,6 +522,11 @@ dialog::backdrop {
   }
 }
 
+/* Initial-render scroll target for the active round card (JS fallback handles Safari/Firefox & live transitions) */
+.rounds-nav-active-target {
+  scroll-initial-target: nearest;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

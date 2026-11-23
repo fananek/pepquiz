@@ -118,10 +118,77 @@ export function HostPage() {
   const [submittingScore, setSubmittingScore] = useState(false);
   const scoreDeltaInputRef = useRef<HTMLInputElement>(null);
   const scoreReasonInputRef = useRef<HTMLInputElement>(null);
+  const roundsNavContainerRef = useRef<HTMLDivElement>(null);
+  const roundsNavDidInitRef = useRef(false);
+
+  const activeQuizId = gameState?.quizId ?? null;
+  const activeRoundIdx = gameState?.currentRoundIndex ?? -1;
+  const activeQuestionIdx = gameState?.currentQuestionIndex ?? -1;
+  const isAtQuizStart = gameState?.state === 'Lobby' || gameState?.state === 'QuizIntro';
 
   useEffect(() => {
     document.title = `${t.host.title} | PubQuiz Engine`;
   }, [t]);
+
+  // Auto-scroll ONLY the Rounds Navigator scroll container (never the outer page)
+  // when the active round/question changes or when returning to Lobby/Intro.
+  useEffect(() => {
+    const container = roundsNavContainerRef.current;
+    if (!container || !activeQuizId) return;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const isInitial = !roundsNavDidInitRef.current;
+    roundsNavDidInitRef.current = true;
+    const behavior: ScrollBehavior = isInitial || prefersReducedMotion ? 'instant' : 'smooth';
+
+    if (activeRoundIdx < 0 || isAtQuizStart) {
+      if (container.scrollTop > 0) {
+        container.scrollTo({ top: 0, behavior });
+      }
+      return;
+    }
+
+    const activeRoundEl = container.querySelector<HTMLElement>(
+      `[data-round-index="${activeRoundIdx}"]`
+    );
+    if (!activeRoundEl) return;
+
+    const activeQuestionEl =
+      activeQuestionIdx >= 0
+        ? activeRoundEl.querySelector<HTMLElement>(`[data-question-index="${activeQuestionIdx}"]`)
+        : null;
+
+    const containerRect = container.getBoundingClientRect();
+    const roundRect = activeRoundEl.getBoundingClientRect();
+    const pad = 12;
+
+    // Keep the entire active round card in view; if a single round is taller than the scrollport,
+    // target the active question button instead so it never scrolls out of sight.
+    const focusEl =
+      activeQuestionEl && roundRect.height > container.clientHeight - pad * 2
+        ? activeQuestionEl
+        : activeRoundEl;
+    const focusRect = focusEl.getBoundingClientRect();
+
+    const focusTop = focusRect.top - containerRect.top + container.scrollTop;
+    const focusBottom = focusTop + focusRect.height;
+    const visibleTop = container.scrollTop + pad;
+    const visibleBottom = container.scrollTop + container.clientHeight - pad;
+
+    if (focusTop >= visibleTop && focusBottom <= visibleBottom) {
+      return;
+    }
+
+    const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
+    const desiredTop =
+      focusRect.height >= container.clientHeight - pad * 2
+        ? Math.min(maxScroll, Math.max(0, focusTop - pad))
+        : Math.min(maxScroll, Math.max(0, focusTop - (container.clientHeight - focusRect.height) / 2));
+
+    container.scrollTo({ top: desiredTop, behavior });
+  }, [activeQuizId, activeRoundIdx, activeQuestionIdx, isAtQuizStart]);
 
   // Connect SignalR & load quizzes list once authenticated
   useEffect(() => {
@@ -1556,15 +1623,16 @@ export function HostPage() {
                 {gameState.quizRules.length} pravidel
               </span>
             </button>
-            <div className="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
+            <div ref={roundsNavContainerRef} className="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
               {gameState.rounds.map((r) => {
                 const isCurrentRound = r.roundIndex === gameState.currentRoundIndex;
                 return (
                   <div
                     key={r.roundNumber}
+                    data-round-index={r.roundIndex}
                     className={`p-3 rounded-xl border ${
                       isCurrentRound
-                        ? 'border-[var(--accent)] bg-[var(--accent-soft)]/30'
+                        ? 'rounds-nav-active-target border-[var(--accent)] bg-[var(--accent-soft)]/30'
                         : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)]'
                     }`}
                   >
@@ -1587,6 +1655,7 @@ export function HostPage() {
                           <button
                             key={qId}
                             type="button"
+                            data-question-index={qIdx}
                             onClick={() => runAction(() => api.startQuestion(token, r.roundIndex, qIdx))}
                             aria-current={isActiveQ ? 'step' : undefined}
                             className={`w-8 h-8 rounded-lg text-xs font-black border cursor-pointer ${
