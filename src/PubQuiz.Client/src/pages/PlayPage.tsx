@@ -190,8 +190,8 @@ export function PlayPage() {
   useEffect(() => {
     const teamLabel = gameState?.self?.teamName;
     document.title = teamLabel
-      ? `${teamLabel} | PubQuiz Engine`
-      : 'Připojit tým (/play) | PubQuiz Engine';
+      ? `${teamLabel} | PepQuiz Engine`
+      : 'Připojit tým (/play) | PepQuiz Engine';
   }, [gameState?.self?.teamName]);
 
   // Automatic 1-click recovery when opened via host's /play?rejoin=CODE link or QR!

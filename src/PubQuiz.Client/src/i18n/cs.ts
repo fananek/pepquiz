@@ -1,6 +1,6 @@
 export const cs = {
   app: {
-    name: 'PubQuiz Engine',
+    name: 'PepQuiz Engine',
     tagline: 'Živý hospodský kvíz v reálném čase',
     skipToContent: 'Přeskočit na hlavní obsah',
     themeLight: 'Přepnout na světlý režim',
@@ -22,7 +22,7 @@ export const cs = {
     backHome: 'Zpět na rozcestník'
   },
   landing: {
-    title: 'PubQuiz Engine',
+    title: 'PepQuiz Engine',
     subtitle: 'Vyberte rozhraní podle role na dnešním kvízu.',
     hostTitle: 'Moderátor (/host)',
     hostDesc: 'Ovládací pult pro řízení hry, úpravu bodů, pauzu a zprávy na projektor.',

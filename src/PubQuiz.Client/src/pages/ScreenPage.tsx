@@ -55,8 +55,8 @@ export function ScreenPage() {
 
   useEffect(() => {
     document.title = gameState?.quizTitle
-      ? `${gameState.quizTitle} – Projektor | PubQuiz Engine`
-      : 'Projektor (/screen) | PubQuiz Engine';
+      ? `${gameState.quizTitle} – Projektor | PepQuiz Engine`
+      : 'Projektor (/screen) | PepQuiz Engine';
   }, [gameState?.quizTitle]);
 
   // Passwordless opening when launched from /host:

@@ -188,7 +188,7 @@ function createStarterQuiz(id: string, title: string, template: 'blank' | 'full7
   return {
     id,
     title,
-    description: 'Vlastní kvíz vytvořený v editoru PubQuiz Engine.',
+    description: 'Vlastní kvíz vytvořený v editoru PepQuiz Engine.',
     defaultLanguage: 'cs',
     rules: [
       'Základní správná odpověď je za 1 000 bodů + rychlostní bonus až 200 bodů.',
@@ -254,7 +254,7 @@ export function DesignerPage() {
   const importInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    document.title = quiz ? `Editor: ${quiz.title} | PubQuiz Engine` : 'Editor kvízů | PubQuiz Engine';
+    document.title = quiz ? `Editor: ${quiz.title} | PepQuiz Engine` : 'Editor kvízů | PepQuiz Engine';
   }, [quiz]);
 
   const loadQuizIntoEditor = useCallback(

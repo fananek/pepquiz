@@ -2,7 +2,7 @@ import type { TranslationDict } from './cs';
 
 export const en: TranslationDict = {
   app: {
-    name: 'PubQuiz Engine',
+    name: 'PepQuiz Engine',
     tagline: 'Real-time live pub quiz',
     skipToContent: 'Skip to main content',
     themeLight: 'Switch to light theme',
@@ -24,7 +24,7 @@ export const en: TranslationDict = {
     backHome: 'Back to portal'
   },
   landing: {
-    title: 'PubQuiz Engine',
+    title: 'PepQuiz Engine',
     subtitle: 'Choose your view for tonight’s quiz.',
     hostTitle: 'Host Console (/host)',
     hostDesc: 'Control panel to run the game, override scores, pause questions, and send screen notices.',

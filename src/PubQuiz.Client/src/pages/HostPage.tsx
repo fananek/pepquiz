@@ -127,7 +127,7 @@ export function HostPage() {
   const isAtQuizStart = gameState?.state === 'Lobby' || gameState?.state === 'QuizIntro';
 
   useEffect(() => {
-    document.title = `${t.host.title} | PubQuiz Engine`;
+    document.title = `${t.host.title} | PepQuiz Engine`;
   }, [t]);
 
   // Auto-scroll ONLY the Rounds Navigator scroll container (never the outer page)
